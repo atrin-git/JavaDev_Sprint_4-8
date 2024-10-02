@@ -1,4 +1,4 @@
-name: Java Tests
+name: Java com.taskmanager.Tests
 
 on:
   pull_request:

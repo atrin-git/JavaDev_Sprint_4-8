@@ -1,8 +1,10 @@
+package com.taskmanager.model;
+
 /**
  * Перечисление для статусов задач
  */
 public enum Status {
-    TO_DO,
+    NEW,
     IN_PROGRESS,
     DONE
 }

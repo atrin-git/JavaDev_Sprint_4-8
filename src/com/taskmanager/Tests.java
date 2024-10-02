@@ -1,3 +1,8 @@
+package com.taskmanager;
+
+import com.taskmanager.model.*;
+import com.taskmanager.service.TaskManager;
+
 import java.util.List;
 
 public class Tests {
@@ -35,7 +40,8 @@ public class Tests {
         for (Subtask subtask : testSubtaskList) {
             taskManager.addSubtask(subtask);
         }
-        System.out.println("Добавлено: " + taskManager.getTaskList().size() + " задач, " + taskManager.getEpicList().size() + " эпиков, " + taskManager.getSubtaskList().size() + " подзадач\n");
+
+        System.out.println("Добавлено: " + taskManager.getTasks().size() + " задач, " + taskManager.getEpics().size() + " эпиков, " + taskManager.getSubtasks().size() + " подзадач\n");
     }
 
     public void testEdit(TaskManager taskManager) {
@@ -48,9 +54,9 @@ public class Tests {
 
     public void testGetTasks(TaskManager taskManager) {
         System.out.println("Перечень всех задач в таск-менеджере:");
-        System.out.println("Задачи: " + taskManager.getTaskList().toString());
-        System.out.println("Эпики: " + taskManager.getEpicList().toString());
-        System.out.println("Подзадачи: " + taskManager.getSubtaskList().toString());
+        System.out.println("Задачи: " + taskManager.getTasks().toString());
+        System.out.println("Эпики: " + taskManager.getEpics().toString());
+        System.out.println("Подзадачи: " + taskManager.getSubtasks().toString());
         System.out.println();
     }
 
@@ -60,7 +66,7 @@ public class Tests {
         System.out.println("3.1. Задача");
         System.out.println(testTaskList.get(1) + "\n");
 
-        System.out.println(Status.TO_DO + " -> " + Status.IN_PROGRESS);
+        System.out.println(Status.NEW + " -> " + Status.IN_PROGRESS);
         Task taskToProgress = new Task(testTaskList.get(1));
         taskToProgress.setStatus(Status.IN_PROGRESS);
         taskManager.editTask(taskToProgress);
@@ -78,8 +84,8 @@ public class Tests {
         System.out.println("Эпик: " + testEpicList.get(1));
         System.out.println("Подзадачи: " + testSubtaskList.get(4) + "\n" + testSubtaskList.get(5) + "\n" + testSubtaskList.get(6) + "\n");
 
-        System.out.println(Status.TO_DO + " -> " + Status.IN_PROGRESS);
-        updateSubtasksToCustomStatus(taskManager,Status.IN_PROGRESS, testSubtaskList.get(4), testSubtaskList.get(5), testSubtaskList.get(6));
+        System.out.println(Status.NEW + " -> " + Status.IN_PROGRESS);
+        updateSubtasksToCustomStatus(taskManager, Status.IN_PROGRESS, testSubtaskList.get(4), testSubtaskList.get(5), testSubtaskList.get(6));
         System.out.println("Текущий статус эпика: " + taskManager.getEpicById(4).getStatus().toString() + "\n");
 
         System.out.println(Status.IN_PROGRESS + " -> " + Status.DONE);
@@ -87,7 +93,7 @@ public class Tests {
         System.out.println("Текущий статус эпика: " + taskManager.getEpicById(4).getStatus().toString() + "\n");
 
         System.out.println(Status.DONE + " -> " + Status.IN_PROGRESS);
-        updateSubtasksToCustomStatus(taskManager,Status.TO_DO, testSubtaskList.get(4));
+        updateSubtasksToCustomStatus(taskManager, Status.NEW, testSubtaskList.get(4));
         System.out.println("Текущий статус эпика: " + taskManager.getEpicById(4).getStatus().toString());
 
         System.out.println();

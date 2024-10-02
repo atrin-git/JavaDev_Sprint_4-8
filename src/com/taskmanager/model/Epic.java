@@ -1,3 +1,5 @@
+package com.taskmanager.model;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +10,7 @@ public class Epic extends AbstractTask {
     /**
      * Список подзадач эпика
      */
-    private List<Integer> subtaskList;
+    private final List<Integer> subtaskList;
 
     /**
      * Конструктор копирования
@@ -17,7 +19,7 @@ public class Epic extends AbstractTask {
      */
     public Epic(Epic epic) {
         super(epic);
-        this.subtaskList = new ArrayList<>();
+        this.subtaskList = epic.getSubtaskList();
     }
 
     /**
@@ -74,21 +76,32 @@ public class Epic extends AbstractTask {
     }
 
     /**
-     * Установка списка подзадач
-     *
-     * @param subtaskList Список подзадач
-     */
-    public void setSubtaskList(List<Integer> subtaskList) {
-        this.subtaskList = subtaskList;
-    }
-
-    /**
      * Добавление новой подзадачи в список
      *
      * @param id Идентификатор подзадачи
      */
     public void addNewSubtask(int id) {
         subtaskList.add(id);
+    }
+
+    /**
+     * Удаление подзадачи по идентификатору
+     *
+     * @param id Идентификатор
+     */
+    public void deleteSubtaskById(Integer id) {
+        if (!subtaskList.contains(id)) {
+            return;
+        }
+
+        subtaskList.remove(id);
+    }
+
+    /**
+     * Удаление всех подзадач из эпика
+     */
+    public void deleteAllSubtasks() {
+        subtaskList.clear();
     }
 
     /**

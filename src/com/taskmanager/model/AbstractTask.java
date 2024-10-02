@@ -1,3 +1,5 @@
+package com.taskmanager.model;
+
 import java.util.Objects;
 
 /**
@@ -44,7 +46,7 @@ public abstract class AbstractTask {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.status = Status.TO_DO;
+        this.status = Status.NEW;
     }
 
     /**
@@ -53,7 +55,7 @@ public abstract class AbstractTask {
      * @param name Имя
      */
     public AbstractTask(String name) {
-        this(null, name, "");
+        this(null, name, null);
     }
 
     /**
@@ -73,7 +75,7 @@ public abstract class AbstractTask {
      * @param name Имя
      */
     public AbstractTask(int id, String name) {
-        this(id, name, "");
+        this(id, name, null);
     }
 
     /**

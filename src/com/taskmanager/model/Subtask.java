@@ -1,3 +1,5 @@
+package com.taskmanager.model;
+
 /**
  * Дата-класс для подзадачи
  */
