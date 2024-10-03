@@ -19,7 +19,7 @@ public class Epic extends AbstractTask {
      */
     public Epic(Epic epic) {
         super(epic);
-        this.subtaskList = epic.getSubtaskList();
+        this.subtaskList = new ArrayList<>(epic.getSubtaskList());
     }
 
     /**
@@ -90,10 +90,6 @@ public class Epic extends AbstractTask {
      * @param id Идентификатор
      */
     public void deleteSubtaskById(Integer id) {
-        if (!subtaskList.contains(id)) {
-            return;
-        }
-
         subtaskList.remove(id);
     }
 

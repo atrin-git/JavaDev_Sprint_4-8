@@ -112,8 +112,6 @@ public class TaskManager {
         final Epic epicSaved = epics.get(epic.getId());
         epicSaved.setName(epic.getName());
         epicSaved.setDescription(epic.getDescription());
-
-        epics.put(epic.getId(), epicSaved);
     }
 
     /**
@@ -183,12 +181,13 @@ public class TaskManager {
      * @return Список подзадач
      */
     public List<Subtask> getSubtaskListByEpicId(int epicId) {
-        if (!epics.containsKey(epicId)) {
+        final Epic epic = epics.get(epicId);
+        if (epic == null) {
             System.out.println("Не существует эпика с id = " + epicId);
             return null;
         }
 
-        return epics.get(epicId).getSubtaskList().stream().map(subtasks::get).toList();
+        return epic.getSubtaskList().stream().map(subtasks::get).toList();
     }
 
     /**
@@ -231,7 +230,8 @@ public class TaskManager {
 
         final List<Integer> subtaskIds = epic.getSubtaskList();
         subtaskIds.forEach(subtasks::remove);
-        subtaskIds.clear();
+        epic.deleteAllSubtasks();
+        correctEpicStatus(epicId);
     }
 
     /**
@@ -327,6 +327,7 @@ public class TaskManager {
 
         int epicId = subtask.getEpicId();
         epics.get(epicId).deleteSubtaskById(id);
+        correctEpicStatus(epicId);
     }
 
     /**
@@ -346,14 +347,15 @@ public class TaskManager {
     private void correctEpicStatus(int epicId) {
         int countToDo = 0;
         int countDone = 0;
-        final List<Integer> currentSubtaskList = epics.get(epicId).getSubtaskList();
+        final Epic epic = epics.get(epicId);
+        final List<Integer> currentSubtaskList = epic.getSubtaskList();
 
         for (Integer id : currentSubtaskList) {
             switch (subtasks.get(id).getStatus()) {
                 case NEW -> countToDo++;
                 case DONE -> countDone++;
                 default -> {
-                    epics.get(epicId).setStatus(Status.IN_PROGRESS);
+                    epic.setStatus(Status.IN_PROGRESS);
                     return;
                 }
             }
@@ -361,11 +363,11 @@ public class TaskManager {
 
         int subtaskListSize = currentSubtaskList.size();
         if (countToDo == subtaskListSize) {
-            epics.get(epicId).setStatus(Status.NEW);
+            epic.setStatus(Status.NEW);
         } else if (countDone == subtaskListSize) {
-            epics.get(epicId).setStatus(Status.DONE);
+            epic.setStatus(Status.DONE);
         } else {
-            epics.get(epicId).setStatus(Status.IN_PROGRESS);
+            epic.setStatus(Status.IN_PROGRESS);
         }
     }
 
