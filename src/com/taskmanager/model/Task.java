@@ -1,7 +1,5 @@
 package com.taskmanager.model;
 
-import java.util.Objects;
-
 /**
  * Дата-класс для задачи
  */

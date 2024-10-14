@@ -1,11 +1,7 @@
 package com.taskmanager.model;
 
-import com.taskmanager.service.InMemoryTaskManager;
-import com.taskmanager.service.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 

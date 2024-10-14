@@ -1,7 +1,5 @@
 package com.taskmanager.model;
 
-import com.taskmanager.service.InMemoryTaskManager;
-import com.taskmanager.service.TaskManager;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
