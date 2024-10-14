@@ -161,6 +161,7 @@ public abstract class AbstractTask {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AbstractTask that = (AbstractTask) o;
+        if (this.getId() != null && this.getId().equals(that.getId())) return true;
         return Objects.equals(name, that.name) && Objects.equals(description, that.description);
     }
 

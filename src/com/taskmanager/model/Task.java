@@ -1,5 +1,7 @@
 package com.taskmanager.model;
 
+import java.util.Objects;
+
 /**
  * Дата-класс для задачи
  */
@@ -61,7 +63,7 @@ public class Task extends AbstractTask {
      */
     @Override
     public String toString() {
-        return "Task { " +
+        return Task.class.getName() + " { " +
                 "id = " + getId() + ", " +
                 "name = \"" + getName() + "\", " +
                 "description = \"" + getDescription() + "\", " +

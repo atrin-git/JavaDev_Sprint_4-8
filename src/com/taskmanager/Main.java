@@ -1,29 +1,33 @@
 package com.taskmanager;
 
+import com.taskmanager.service.Managers;
 import com.taskmanager.service.TaskManager;
 
 public class Main {
 
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
+        TaskManager taskManager = Managers.getDefault();
 
         // Тестирование функционала
-        Tests tests = new Tests();
+        Scenarios scenarios = new Scenarios();
 
         // Проверка добавления задач
-        tests.testAdd(taskManager);
-        tests.testGetTasks(taskManager);
+        scenarios.testAdd(taskManager);
+        scenarios.testGetTasks(taskManager);
 
         // Проверка изменения задач
-        tests.testEdit(taskManager);
-        tests.testGetTasks(taskManager);
+        scenarios.testEdit(taskManager);
+        scenarios.testGetTasks(taskManager);
 
-        // Проверка обвновления статусов
-        tests.updateStatuses(taskManager);
+        // Проверка обновления статусов
+        scenarios.updateStatuses(taskManager);
+
+        // Проверка просмотра истории
+        Scenarios.testHistory(taskManager);
 
         // Проверка удаления
-        tests.testDelete(taskManager);
-        tests.testGetTasks(taskManager);
+        scenarios.testDelete(taskManager);
+        scenarios.testGetTasks(taskManager);
     }
 
 }

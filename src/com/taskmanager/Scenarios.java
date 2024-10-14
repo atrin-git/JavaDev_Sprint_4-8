@@ -5,7 +5,7 @@ import com.taskmanager.service.TaskManager;
 
 import java.util.List;
 
-public class Tests {
+public class Scenarios {
 
     private final List<Task> testTaskList = List.of(
             new Task(1, "Ответить на письма"),
@@ -110,8 +110,26 @@ public class Tests {
         }
     }
 
+    public static void testHistory(TaskManager taskManager) {
+        System.out.println("4. Просмотр истории");
+
+        System.out.println(taskManager.getHistory());
+        System.out.println("Количество элементов в истории: " + taskManager.getHistory().size());
+
+        taskManager.getTaskById(1);
+        taskManager.getEpicById(3);
+        taskManager.getSubtaskById(9);
+        taskManager.getSubtaskById(7);
+        taskManager.getSubtaskById(5);
+        taskManager.getSubtaskById(8);
+
+        System.out.println(taskManager.getHistory());
+        System.out.println("Количество элементов в истории: " + taskManager.getHistory().size());
+
+    }
+
     public void testDelete(TaskManager taskManager) {
-        System.out.println("4. Удаление задач, эпиков и подзадач.");
+        System.out.println("5. Удаление задач, эпиков и подзадач.");
 
         taskManager.deleteTaskById(1);
         taskManager.deleteSubtaskById(5);
@@ -120,4 +138,5 @@ public class Tests {
         taskManager.deleteAllSubtasks();
         taskManager.deleteAllEpics();
     }
+
 }

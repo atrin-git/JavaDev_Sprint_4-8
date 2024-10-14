@@ -7,7 +7,7 @@ public class Subtask extends AbstractTask {
     /**
      * Идентификатор эпика, к которому привязана подзадача
      */
-    private final Integer epicId;
+    private Integer epicId;
 
     /**
      * Конструктор копирования
@@ -71,6 +71,10 @@ public class Subtask extends AbstractTask {
         return epicId;
     }
 
+    public void setEpicId(Integer epicId) {
+        this.epicId = epicId;
+    }
+
     /**
      * Представление объекта подзадачи в виде строки
      *
@@ -78,7 +82,7 @@ public class Subtask extends AbstractTask {
      */
     @Override
     public String toString() {
-        return "Subtask { " +
+        return Subtask.class.getName() + " { " +
                 "id = " + getId() + ", " +
                 "name = \"" + getName() + "\", " +
                 "description = \"" + getDescription() + "\", " +
