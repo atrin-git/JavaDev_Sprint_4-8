@@ -2,7 +2,7 @@ package com.taskmanager.service;
 
 import com.taskmanager.model.AbstractTask;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +11,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     private final List<AbstractTask> history;
 
     public InMemoryHistoryManager() {
-        this.history = new ArrayList<>();
+        this.history = new LinkedList<>();
     }
 
     public static int getHistoryCapacity() {
@@ -28,7 +28,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public List<AbstractTask> getHistory() {
-        return this.history;
+        return List.copyOf(this.history);
     }
 
     @Override

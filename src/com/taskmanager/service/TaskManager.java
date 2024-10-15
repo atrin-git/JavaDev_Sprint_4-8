@@ -5,7 +5,7 @@ import com.taskmanager.model.*;
 import java.util.*;
 
 /**
- * Класс, обеспечивающий работу таск-менеджер с задачами
+ * Интерфейс, обеспечивающий работу с задачами
  */
 public interface TaskManager {
 
@@ -56,28 +56,28 @@ public interface TaskManager {
      *
      * @return Список задач
      */
-    ArrayList<Task> getTasks();
+    List<Task> getTasks();
 
     /**
      * Получение списка эпика
      *
      * @return Список эпика
      */
-    ArrayList<Epic> getEpics();
+    List<Epic> getEpics();
 
     /**
      * Получение списка подзадач
      *
      * @return Список подзадач
      */
-    ArrayList<Subtask> getSubtasks();
+    List<Subtask> getSubtasks();
 
     /**
      * Получение всех задач, эпиков и подзадач
      *
      * @return Список всех задач, эпиков и подзадач
      */
-    ArrayList<AbstractTask> getAllEntities();
+    List<AbstractTask> getAllEntities();
 
     /**
      * Получение списка подзадач конкретного эпика

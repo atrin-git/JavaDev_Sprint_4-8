@@ -2,10 +2,7 @@ package com.taskmanager.service;
 
 import com.taskmanager.model.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Класс таск-менеджера, реализующий хранение задач в текущей памяти
@@ -18,15 +15,15 @@ public class InMemoryTaskManager implements TaskManager {
     /**
      * Список задач
      */
-    private final HashMap<Integer, Task> tasks;
+    private final Map<Integer, Task> tasks;
     /**
      * Список эпиков
      */
-    private final HashMap<Integer, Epic> epics;
+    private final Map<Integer, Epic> epics;
     /**
      * Список подзадач
      */
-    private final HashMap<Integer, Subtask> subtasks;
+    private final Map<Integer, Subtask> subtasks;
     /**
      * Менеджер для работы с историей просмотра
      */
@@ -117,23 +114,23 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getTasks() {
-        return new ArrayList<>(tasks.values());
+    public List<Task> getTasks() {
+        return List.copyOf(tasks.values());
     }
 
     @Override
-    public ArrayList<Epic> getEpics() {
-        return new ArrayList<>(epics.values());
+    public List<Epic> getEpics() {
+        return List.copyOf(epics.values());
     }
 
     @Override
-    public ArrayList<Subtask> getSubtasks() {
-        return new ArrayList<>(subtasks.values());
+    public List<Subtask> getSubtasks() {
+        return List.copyOf(subtasks.values());
     }
 
     @Override
-    public ArrayList<AbstractTask> getAllEntities() {
-        ArrayList<AbstractTask> allEntities = new ArrayList<>();
+    public List<AbstractTask> getAllEntities() {
+        List<AbstractTask> allEntities = new ArrayList<>();
 
         allEntities.addAll(tasks.values());
         allEntities.addAll(epics.values());
