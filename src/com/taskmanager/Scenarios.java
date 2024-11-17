@@ -14,17 +14,22 @@ public class Scenarios {
 
     private final List<Epic> testEpicList = List.of(
             new Epic(3, "Сделать уборку"),
-            new Epic(4, "Пройти спринт на Практикуме")
+            new Epic(4, "Пройти спринт на Практикуме"),
+            new Epic(5, "Пройти спринт 6 на Практикуме"),
+            new Epic(6, "Глобальная задача без плана")
     );
 
     private final List<Subtask> testSubtaskList = List.of(
-            new Subtask(5, "Вытереть пыль", testEpicList.get(0).getId()),
-            new Subtask(6, "Помыть полы", testEpicList.get(0).getId()),
-            new Subtask(7, "Вымыть сантехнику", testEpicList.get(0).getId()),
-            new Subtask(8, "Вынести мусор", testEpicList.get(0).getId()),
-            new Subtask(9, "Пройти теорию", testEpicList.get(1).getId()),
-            new Subtask(10, "Посетить вебинар", testEpicList.get(1).getId()),
-            new Subtask(11, "Выполнить практику", testEpicList.get(1).getId())
+            new Subtask(7, "Вытереть пыль", testEpicList.get(0).getId()),
+            new Subtask(8, "Помыть полы", testEpicList.get(0).getId()),
+            new Subtask(9, "Вымыть сантехнику", testEpicList.get(0).getId()),
+            new Subtask(10, "Вынести мусор", testEpicList.get(0).getId()),
+            new Subtask(11, "Пройти теорию", testEpicList.get(1).getId()),
+            new Subtask(12, "Посетить вебинар", testEpicList.get(1).getId()),
+            new Subtask(13, "Выполнить практику", testEpicList.get(1).getId()),
+            new Subtask(14, "Написать список", testEpicList.get(2).getId()),
+            new Subtask(15, "Слинковать с мапой", testEpicList.get(2).getId()),
+            new Subtask(16, "Исправить другие методы", testEpicList.get(2).getId())
     );
 
     public void testAdd(TaskManager taskManager) {
@@ -118,11 +123,32 @@ public class Scenarios {
 
         taskManager.getTaskById(1);
         taskManager.getEpicById(3);
-        taskManager.getSubtaskById(9);
+        taskManager.getSubtaskById(11);
         taskManager.getSubtaskById(7);
-        taskManager.getSubtaskById(5);
+        taskManager.getSubtaskById(9);
         taskManager.getSubtaskById(8);
+        taskManager.getEpicById(5);
+        taskManager.getSubtaskById(14);
+        taskManager.getTaskById(2);
+        taskManager.getSubtaskById(11);
+        taskManager.getSubtaskById(7);
+        taskManager.getSubtaskById(13);
+        taskManager.getTaskById(2);
+        taskManager.getEpicById(5);
+        taskManager.getSubtaskById(15);
+        taskManager.getSubtaskById(12);
+        taskManager.getSubtaskById(14);
+        taskManager.getEpicById(3);
+        taskManager.getSubtaskById(16);
 
+        // 4 1 9 8 11 7 13 2 5 15 12 14 3 16
+        System.out.println(taskManager.getHistory());
+        System.out.println("Количество элементов в истории: " + taskManager.getHistory().size());
+
+        taskManager.deleteTaskById(2);
+        taskManager.deleteEpicById(5);
+
+        // 4 1 9 8 11 7 13 12 3
         System.out.println(taskManager.getHistory());
         System.out.println("Количество элементов в истории: " + taskManager.getHistory().size());
 
@@ -132,7 +158,7 @@ public class Scenarios {
         System.out.println("5. Удаление задач, эпиков и подзадач.");
 
         taskManager.deleteTaskById(1);
-        taskManager.deleteSubtaskById(5);
+        taskManager.deleteSubtaskById(7);
         taskManager.deleteEpicById(4);
         taskManager.deleteAllTasks();
         taskManager.deleteAllSubtasks();
