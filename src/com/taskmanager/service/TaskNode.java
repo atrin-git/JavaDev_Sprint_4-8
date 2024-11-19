@@ -14,7 +14,6 @@ public class TaskNode {
     public TaskNode(AbstractTask task, TaskNode prev) {
         this.task = task;
         this.prev = prev;
-        this.next = null;
     }
 
     public AbstractTask getTask() {

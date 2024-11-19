@@ -11,46 +11,6 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     public InMemoryHistoryManager() {
         this.idTaskMap = new HashMap<>();
-        this.head = null;
-        this.tail = null;
-    }
-
-    private void linkLast(AbstractTask task) {
-        if (head == null) {
-            head = new TaskNode(task);
-            tail = head;
-        } else {
-            tail.setNext(new TaskNode(task, tail));
-            tail = tail.getNext();
-        }
-    }
-
-    private List<AbstractTask> getTasks() {
-        List<AbstractTask> tasks = new ArrayList<>();
-        TaskNode current = head;
-
-        while (current != null) {
-            tasks.add(current.getTask());
-            current = current.getNext();
-        }
-
-        return tasks;
-    }
-
-    private void removeNode(TaskNode taskNode) {
-        if (taskNode.getNext() == null && taskNode.getPrev() == null) {
-            head = null;
-            tail = null;
-        } else if (taskNode.getPrev() == null) {
-            head = taskNode.getNext();
-            head.setPrev(null);
-        } else if (taskNode.getNext() == null) {
-            tail = taskNode.getPrev();
-            tail.setNext(null);
-        } else {
-            taskNode.getPrev().setNext(taskNode.getNext());
-            taskNode.getNext().setPrev(taskNode.getPrev());
-        }
     }
 
     @Override
@@ -64,9 +24,9 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int id) {
-        if (idTaskMap.containsKey(id)) {
-            removeNode(idTaskMap.get(id));
-            idTaskMap.remove(id);
+        final TaskNode nodeToRemove = idTaskMap.remove(id);
+        if (nodeToRemove != null) {
+            removeNode(nodeToRemove);
         }
     }
 
@@ -93,5 +53,46 @@ public class InMemoryHistoryManager implements HistoryManager {
         return InMemoryHistoryManager.class.getName() + " {" +
                 "history = " + getTasks() +
                 '}';
+    }
+
+    private void linkLast(AbstractTask task) {
+        if (head == null) {
+            head = new TaskNode(task);
+            tail = head;
+        } else {
+            tail.setNext(new TaskNode(task, tail));
+            tail = tail.getNext();
+        }
+    }
+
+    private List<AbstractTask> getTasks() {
+        List<AbstractTask> tasks = new LinkedList<>();
+        TaskNode current = head;
+
+        while (current != null) {
+            tasks.addLast(current.getTask());
+            current = current.getNext();
+        }
+
+        return tasks;
+    }
+
+    private void removeNode(TaskNode taskNode) {
+        TaskNode next = taskNode.getNext();
+        TaskNode prev = taskNode.getPrev();
+
+        if (next == null && prev == null) {
+            head = null;
+            tail = null;
+        } else if (prev == null) {
+            head = next;
+            head.setPrev(null);
+        } else if (next == null) {
+            tail = prev;
+            tail.setNext(null);
+        } else {
+            prev.setNext(next);
+            next.setPrev(prev);
+        }
     }
 }
