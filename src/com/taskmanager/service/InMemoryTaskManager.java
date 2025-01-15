@@ -9,10 +9,6 @@ import java.util.*;
  */
 public class InMemoryTaskManager implements TaskManager {
     /**
-     * Текущий свободный идентификтор
-     */
-    private int currentId;
-    /**
      * Список задач
      */
     private final Map<Integer, Task> tasks;
@@ -28,6 +24,10 @@ public class InMemoryTaskManager implements TaskManager {
      * Менеджер для работы с историей просмотра
      */
     private final HistoryManager historyManager;
+    /**
+     * Текущий свободный идентификтор
+     */
+    private int currentId;
 
     /**
      * Конструктор для создания нового таск-менеджера
@@ -47,7 +47,11 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
 
-        task.setId(getNextId());
+        if (task.getId() != null) {
+            updateCurrentId(task.getId());
+        } else {
+            task.setId(getNextId());
+        }
         tasks.put(task.getId(), task);
     }
 
@@ -58,7 +62,11 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
 
-        epic.setId(getNextId());
+        if (epic.getId() != null) {
+            updateCurrentId(epic.getId());
+        } else {
+            epic.setId(getNextId());
+        }
         epics.put(epic.getId(), epic);
     }
 
@@ -71,7 +79,11 @@ public class InMemoryTaskManager implements TaskManager {
             }
         }
 
-        subtask.setId(getNextId());
+        if (subtask.getId() != null) {
+            updateCurrentId(subtask.getId());
+        } else {
+            subtask.setId(getNextId());
+        }
         subtasks.put(subtask.getId(), subtask);
 
         epics.get(subtask.getEpicId()).addNewSubtask(subtask.getId());
@@ -293,6 +305,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public int getNextId() {
         return currentId++;
+    }
+
+    private void updateCurrentId(Integer newValue) {
+        if (newValue > currentId)
+            currentId = newValue + 1;
     }
 
     @Override

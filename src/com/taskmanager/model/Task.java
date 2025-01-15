@@ -61,11 +61,12 @@ public class Task extends AbstractTask {
      */
     @Override
     public String toString() {
-        return Task.class.getName() + " { " +
-                "id = " + getId() + ", " +
-                "name = \"" + getName() + "\", " +
-                "description = \"" + getDescription() + "\", " +
-                "status = " + getStatus() +
-                " }";
+        return String.join(",",
+                /* id */            getId().toString(),
+                /* type */          TaskType.TASK.toString(),
+                /* name */          getName(),
+                /* status */        getStatus().toString(),
+                /* description */   getDescription() != null ? getDescription() : "",
+                /* epic */          "");
     }
 }

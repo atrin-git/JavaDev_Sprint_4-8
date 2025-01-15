@@ -577,4 +577,32 @@ class InMemoryTaskManagerTest {
         assertEquals(taskManager.getHistory().size(), 1, "Ожидался список из 1 элемента");
         assertTrue(taskManager.getHistory().containsAll(tasks), "Не обнаружен добавленный в историю элемент");
     }
+
+    @Test
+    public void checkUpdateCurrentIdNewValueIsMore() {
+        Epic epic1 = new Epic("testEpic1");
+        Epic epic23 = new Epic(23, "testEpic23");
+        Epic epic24 = new Epic("testEpic24");
+        taskManager.addEpic(epic1);
+        taskManager.addEpic(epic23);
+        taskManager.addEpic(epic24);
+
+        assertEquals(3, taskManager.getEpics().size(), "Ожидался список из 3 элементов");
+        assertFalse(taskManager.getEpics().stream().filter(e -> e.getId().equals(24)).findFirst().isEmpty(), "Идентификатор обновлен некорректно");
+    }
+
+    @Test
+    public void checkUpdateCurrentIdNewValueIsLess() {
+        Epic epic1 = new Epic("testEpic1");
+        Epic epic23 = new Epic(23, "testEpic23");
+        Epic epic21 = new Epic(21, "testEpic21");
+        Epic epic24 = new Epic("testEpic24");
+        taskManager.addEpic(epic1);
+        taskManager.addEpic(epic23);
+        taskManager.addEpic(epic21);
+        taskManager.addEpic(epic24);
+
+        assertEquals(4, taskManager.getEpics().size(), "Ожидался список из 3 элементов");
+        assertFalse(taskManager.getEpics().stream().filter(e -> e.getId().equals(24)).findFirst().isEmpty(), "Идентификатор обновлен некорректно");
+    }
 }

@@ -107,12 +107,12 @@ public class Epic extends AbstractTask {
      */
     @Override
     public String toString() {
-        return Epic.class.getName() + " { " +
-                "subtaskList = " + subtaskList + ", " +
-                "id = " + getId() + ", " +
-                "name = \"" + getName() + "\", " +
-                "description = \"" + getDescription() + "\", " +
-                "status = " + getStatus() +
-                " }";
+        return String.join(",",
+                /* id */            getId().toString(),
+                /* type */          TaskType.EPIC.toString(),
+                /* name */          getName(),
+                /* status */        getStatus().toString(),
+                /* description */   getDescription() != null ? getDescription() : "",
+                /* epic */          "");
     }
 }
