@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,8 +22,7 @@ public class FileBackedTaskManagerTest {
 
     @BeforeEach
     public void prepare() throws IOException {
-        file = Files.createTempFile(Paths.get("/Users/nirta/IdeaProjects/java-dev/javadev_sprint_4/resources"),
-                "task", ".csv").toFile();
+        file = Files.createTempFile("task", ".csv").toFile();
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 

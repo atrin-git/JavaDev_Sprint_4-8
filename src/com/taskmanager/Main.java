@@ -6,12 +6,11 @@ import com.taskmanager.service.TaskManager;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        File file = Files.createTempFile(Paths.get("/Users/nirta/IdeaProjects/java-dev/javadev_sprint_4/resources"), "task", ".csv").toFile();
+        File file = Files.createTempFile("task", ".csv").toFile();
         TaskManager taskManager = Managers.loadFromFile(file);
 
         // Тестирование функционала
