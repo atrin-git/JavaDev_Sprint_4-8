@@ -13,6 +13,12 @@ public interface HistoryManager {
     void add(AbstractTask abstractTask);
 
     /**
+     * Удаление задачи из списка просмотренных
+     * @param id Идентификатор задачи
+     */
+    void remove(int id);
+
+    /**
      * Получение списка просмотренных задача
      * @return Список просмотренных задач
      */

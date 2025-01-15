@@ -547,4 +547,34 @@ class InMemoryTaskManagerTest {
 
         assertTrue(taskManager.getHistory().containsAll(List.of(task, taskModified)), "В истории должны хранится старые версии задач");
     }
+
+
+    @Test
+    void checkDeleteEpicWithSubtasksInHistory() {
+        Epic epic1 = new Epic("testEpic1");
+        Epic epic2 = new Epic("testEpic2");
+        taskManager.addEpic(epic1);
+        taskManager.addEpic(epic2);
+
+        Subtask subtask3 = new Subtask("testSubtask3", epic1.getId());
+        Subtask subtask4 = new Subtask("testSubtask4", epic1.getId());
+        taskManager.addSubtask(subtask3);
+        taskManager.addSubtask(subtask4);
+
+        List<AbstractTask> tasks = new ArrayList<>(List.of(epic1, epic2, subtask3, subtask4));
+
+        taskManager.getEpicById(epic1.getId());
+        taskManager.getSubtaskById(subtask3.getId());
+        taskManager.getSubtaskById(subtask4.getId());
+        taskManager.getEpicById(epic2.getId());
+
+
+        taskManager.deleteEpicById(epic1.getId());
+        tasks.remove(epic1);
+        tasks.remove(subtask3);
+        tasks.remove(subtask4);
+
+        assertEquals(taskManager.getHistory().size(), 1, "Ожидался список из 1 элемента");
+        assertTrue(taskManager.getHistory().containsAll(tasks), "Не обнаружен добавленный в историю элемент");
+    }
 }
