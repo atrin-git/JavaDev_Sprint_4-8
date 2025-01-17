@@ -13,6 +13,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public FileBackedTaskManager(File file) {
+        if (file == null) {
+            throw new ManagerReadException("Файл не инициализирован");
+        }
+
         this.file = file;
         restoreFromFile();
     }
@@ -110,36 +114,24 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     private void restoreFromFile() {
-        try {
-            if (file == null) {
-                throw new ManagerReadException("Файл не инициализирован");
-            }
-
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            if (!reader.ready()) {
-                throw new ManagerReadException("Не удаётся прочитать файл");
-            }
-
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             reader.readLine(); // пропускаем шапку
             while ((line = reader.readLine()) != null) {
                 AbstractTask task = fromString(line);
-                if (task == null)
-                    throw new RuntimeException("Не удалось преобразовать строку в задачу: " + line);
+                if (task == null) {
+                    throw new ManagerReadException("Не удалось преобразовать строку в задачу: " + line);
+                }
 
                 addAbstractTask(task);
             }
-        } catch (IOException | ManagerReadException e) {
-            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            throw new ManagerReadException("Ошибка при чтении данных из файла: " + e.getMessage());
         }
     }
 
     private void save() {
         try (FileWriter writer = new FileWriter(file)) {
-            if (!file.canWrite()) {
-                throw new ManagerSaveException("Не удаётся записать в файл");
-            }
-
             writer.write("id,type,name,status,description,epic\n");
 
             for (Task task : getTasks()) {
@@ -151,8 +143,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             for (Subtask subtask : getSubtasks()) {
                 writer.write(subtask.toString() + "\n");
             }
-        } catch (IOException | ManagerSaveException e) {
-            System.out.println(e.getMessage());
+        } catch (IOException e) {
+            throw new ManagerSaveException("Ошибка при записи данных в файл: " + e.getMessage());
         }
     }
 

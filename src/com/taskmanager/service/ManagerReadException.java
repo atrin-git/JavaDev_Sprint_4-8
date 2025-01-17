@@ -3,7 +3,7 @@ package com.taskmanager.service;
 /**
  * Исключение в случае проблем с чтением таск-менеджером из файла
  */
-public class ManagerReadException extends Exception {
+public class ManagerReadException extends RuntimeException {
 
     public ManagerReadException() {
         super();
