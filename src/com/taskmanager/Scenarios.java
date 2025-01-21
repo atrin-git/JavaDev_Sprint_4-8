@@ -9,18 +9,18 @@ public class Scenarios {
 
     private final List<Task> testTaskList = List.of(
             new Task(1, "Ответить на письма"),
-            new Task(2, "Отправить посылку по почте")
+            new Task(2, "Отправить посылку по почте", "Адрес получателя в личном кабинете")
     );
 
     private final List<Epic> testEpicList = List.of(
             new Epic(3, "Сделать уборку"),
             new Epic(4, "Пройти спринт на Практикуме"),
-            new Epic(5, "Пройти спринт 6 на Практикуме"),
-            new Epic(6, "Глобальная задача без плана")
+            new Epic(5, "Пройти спринт 6 на Практикуме", "Пройти его уже наконец-то"),
+            new Epic(6, "Глобальная задача без плана", "Нет плана - нет пунктов")
     );
 
     private final List<Subtask> testSubtaskList = List.of(
-            new Subtask(7, "Вытереть пыль", testEpicList.get(0).getId()),
+            new Subtask(7, "Вытереть пыль", "Для мониторов не забыть использовать специальную жидкость", testEpicList.get(0).getId()),
             new Subtask(8, "Помыть полы", testEpicList.get(0).getId()),
             new Subtask(9, "Вымыть сантехнику", testEpicList.get(0).getId()),
             new Subtask(10, "Вынести мусор", testEpicList.get(0).getId()),
@@ -53,7 +53,7 @@ public class Scenarios {
         System.out.println("2. Редактирование задач, эпиков и подзадач.");
         taskManager.editTask(new Task(testTaskList.get(1).getId(), "Отправить посылку через СДЭК"));
         taskManager.editEpic(new Epic(testEpicList.get(1).getId(), "Пройти спринт на Практикуме", "5 спринт"));
-        taskManager.editSubtask(new Subtask(testSubtaskList.get(3).getId(), "Вынести мусор из всех комнат", "Кабинет, кухня, ванная", testSubtaskList.get(3).getEpicId()));
+        taskManager.editSubtask(new Subtask(testSubtaskList.get(3).getId(), "Вынести мусор из всех комнат", "Кабинет кухня ванная", testSubtaskList.get(3).getEpicId()));
         System.out.println();
     }
 

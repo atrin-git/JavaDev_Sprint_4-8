@@ -82,11 +82,12 @@ public class Subtask extends AbstractTask {
      */
     @Override
     public String toString() {
-        return Subtask.class.getName() + " { " +
-                "id = " + getId() + ", " +
-                "name = \"" + getName() + "\", " +
-                "description = \"" + getDescription() + "\", " +
-                "status = " + getStatus() +
-                " }";
+        return String.join(",",
+                /* id */            getId().toString(),
+                /* type */          TaskType.SUBTASK.toString(),
+                /* name */          getName(),
+                /* status */        getStatus().toString(),
+                /* description */   getDescription() != null ? getDescription() : "",
+                /* epic */          getEpicId().toString());
     }
 }
