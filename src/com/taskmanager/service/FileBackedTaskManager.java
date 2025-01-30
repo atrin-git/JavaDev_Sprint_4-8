@@ -3,6 +3,9 @@ package com.taskmanager.service;
 import com.taskmanager.model.*;
 
 import java.io.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
@@ -132,7 +135,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void save() {
         try (FileWriter writer = new FileWriter(file)) {
-            writer.write("id,type,name,status,description,epic\n");
+            writer.write("id,type,name,status,description,epic,start_date,duration\n");
 
             for (Task task : getTasks()) {
                 writer.write(task.toString() + "\n");
@@ -157,16 +160,23 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 case TASK -> {
                     Task task = new Task(Integer.parseInt(words[0]), words[2], words[4]);
                     task.setStatus(Status.valueOf(words[3]));
+                    task.setStartTime(LocalDateTime.parse(words[6], DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                    task.setDuration(Duration.ofSeconds(Integer.parseInt(words[7])));
                     return task;
                 }
                 case EPIC -> {
                     Epic epic = new Epic(Integer.parseInt(words[0]), words[2], words[4]);
                     epic.setStatus(Status.valueOf(words[3]));
+                    epic.setStartTime(LocalDateTime.parse(words[6], DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                    epic.setDuration(Duration.ofSeconds(Integer.parseInt(words[7])));
+                    epic.setEndTime(epic.getStartTime().plus(epic.getDuration()));
                     return epic;
                 }
                 case SUBTASK -> {
                     Subtask subtask = new Subtask(Integer.parseInt(words[0]), words[2], words[4], Integer.parseInt(words[5]));
                     subtask.setStatus(Status.valueOf(words[3]));
+                    subtask.setStartTime(LocalDateTime.parse(words[6], DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                    subtask.setDuration(Duration.ofSeconds(Integer.parseInt(words[7])));
                     return subtask;
                 }
             }

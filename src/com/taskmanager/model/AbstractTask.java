@@ -1,5 +1,7 @@
 package com.taskmanager.model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -24,7 +26,17 @@ public abstract class AbstractTask {
     private Status status;
 
     /**
-     * Контруктор копирования
+     * Продолжительность выполнения задачи
+     */
+    private Duration duration;
+
+    /**
+     * Дата и время начала выполнения задачи
+     */
+    private LocalDateTime startTime;
+
+    /**
+     * Конструктор копирования
      *
      * @param abstractTask Объект, для которого необходима копия
      */
@@ -33,6 +45,26 @@ public abstract class AbstractTask {
         this.name = abstractTask.getName();
         this.description = abstractTask.getDescription();
         this.status = abstractTask.getStatus();
+        this.duration = abstractTask.getDuration();
+        this.startTime = abstractTask.getStartTime();
+    }
+
+    /**
+     * Конструктор
+     *
+     * @param id          Идентификатор
+     * @param name        Имя
+     * @param description Описание
+     * @param startTime   Дата и время начала работы над задачей
+     * @param duration    Продолжительность работы с задачей
+     */
+    public AbstractTask(Integer id, String name, String description, LocalDateTime startTime, Duration duration) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = Status.NEW;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     /**
@@ -43,10 +75,7 @@ public abstract class AbstractTask {
      * @param description Описание
      */
     public AbstractTask(Integer id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.status = Status.NEW;
+        this(id, name, description, LocalDateTime.now(), Duration.ZERO);
     }
 
     /**
@@ -76,6 +105,18 @@ public abstract class AbstractTask {
      */
     public AbstractTask(int id, String name) {
         this(id, name, null);
+    }
+
+    /**
+     * Конструктор
+     *
+     * @param id        Идентификатор
+     * @param name      Имя
+     * @param startTime Дата и время начала работы над задачей
+     * @param duration  Продолжительность работы с задачей
+     */
+    public AbstractTask(int id, String name, LocalDateTime startTime, Duration duration) {
+        this(id, name, null, startTime, duration);
     }
 
     /**
@@ -148,10 +189,54 @@ public abstract class AbstractTask {
      */
     public void setStatus(Status status) {
         this.status = status;
+        if (status.equals(Status.DONE)) {
+            this.setDuration(Duration.between(this.startTime, LocalDateTime.now()));
+        }
     }
 
     /**
-     * Метод првоерк задач на эквивалентность
+     * Получить продолжительность выполнения задачи
+     *
+     * @return Продолжительность выполнения задачи
+     */
+    public Duration getDuration() {
+        return duration;
+    }
+
+    /**
+     * Установить продолжительность выполнения задачи
+     */
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    /**
+     * Получить дату и время начала выполнения задачи
+     *
+     * @return Дата и время начала выполнения задачи
+     */
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    /**
+     * Установить дату и время начала выполнения задачи
+     */
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    /**
+     * Получить дату и время окончания выполнения задачи
+     *
+     * @return Дата и время окончания выполнения задачи
+     */
+    public LocalDateTime getEndTime() {
+        return this.startTime.plus(this.duration);
+    }
+
+    /**
+     * Метод проверки задач на эквивалентность
      *
      * @param o Задача для сравнения
      * @return Результат сравнения

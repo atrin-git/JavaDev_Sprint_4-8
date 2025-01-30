@@ -110,7 +110,7 @@ public interface TaskManager {
     void deleteAllSubtasksInEpic(int epicId);
 
     /**
-     * Получение задачи по индентификатору
+     * Получение задачи по идентификатору
      *
      * @param id Идентификатор
      * @return Задача
@@ -157,7 +157,7 @@ public interface TaskManager {
     /**
      * Получение номера (идентификатора) для задачи
      *
-     * @return Идентификтор
+     * @return Идентификатор
      */
     int getNextId();
 
@@ -167,6 +167,8 @@ public interface TaskManager {
      * @param epicId Идентификатор эпика
      */
     void correctEpicStatus(int epicId);
+
+    void correctEpicDuration(Epic epic);
 
     /**
      * Получение истории просмотра задач (последние 10 задач)

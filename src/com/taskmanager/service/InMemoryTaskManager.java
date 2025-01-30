@@ -2,6 +2,8 @@ package com.taskmanager.service;
 
 import com.taskmanager.model.*;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -25,7 +27,7 @@ public class InMemoryTaskManager implements TaskManager {
      */
     private final HistoryManager historyManager;
     /**
-     * Текущий свободный идентификтор
+     * Текущий свободный идентификатор
      */
     private int currentId;
 
@@ -88,6 +90,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         epics.get(subtask.getEpicId()).addNewSubtask(subtask.getId());
         correctEpicStatus(subtask.getEpicId());
+        correctEpicDuration(getEpicById(subtask.getEpicId()));
     }
 
     @Override
@@ -123,6 +126,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         subtasks.put(subtask.getId(), subtask);
         correctEpicStatus(subtask.getEpicId());
+        correctEpicDuration(getEpicById(subtask.getEpicId()));
     }
 
     @Override
@@ -195,6 +199,7 @@ public class InMemoryTaskManager implements TaskManager {
         epics.forEach((id, epic) -> {
             epic.deleteAllSubtasks();
             correctEpicStatus(epic.getId());
+            correctEpicDuration(epic);
         });
 
         subtasks.clear();
@@ -215,6 +220,7 @@ public class InMemoryTaskManager implements TaskManager {
         subtaskIds.forEach(subtasks::remove);
         epic.deleteAllSubtasks();
         correctEpicStatus(epicId);
+        correctEpicDuration(epic);
     }
 
     @Override
@@ -298,6 +304,7 @@ public class InMemoryTaskManager implements TaskManager {
         int epicId = subtask.getEpicId();
         epics.get(epicId).deleteSubtaskById(id);
         correctEpicStatus(epicId);
+        correctEpicDuration(getEpicById(subtask.getEpicId()));
 
         historyManager.remove(id);
     }
@@ -308,8 +315,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private void updateCurrentId(Integer newValue) {
-        if (newValue > currentId)
-            currentId = newValue + 1;
+        if (newValue > currentId) currentId = newValue + 1;
     }
 
     @Override
@@ -341,6 +347,31 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    public void correctEpicDuration(Epic epic) {
+        final List<Subtask> subtaskList = getSubtaskListByEpicId(epic.getId());
+
+        if (subtaskList.isEmpty()) {
+            epic.setStartTime(null);
+            epic.setEndTime(null);
+            epic.setDuration(Duration.ZERO);
+            return;
+        }
+        // set start
+        LocalDateTime startTime = subtaskList.stream().map(AbstractTask::getStartTime).min(Comparator.naturalOrder()).orElseThrow();
+
+        epic.setStartTime(startTime);
+
+        // set end
+        LocalDateTime endTime = subtaskList.stream().map(AbstractTask::getEndTime).max(Comparator.naturalOrder()).orElseThrow();
+
+        epic.setEndTime(startTime);
+
+        // set duration
+        Duration duration = Duration.between(startTime, endTime);
+        epic.setDuration(duration);
+    }
+
+    @Override
     public List<AbstractTask> getHistory() {
         return historyManager.getHistory();
     }
@@ -350,9 +381,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         InMemoryTaskManager that = (InMemoryTaskManager) o;
-        return Objects.equals(tasks, that.tasks)
-                && Objects.equals(epics, that.epics)
-                && Objects.equals(subtasks, that.subtasks);
+        return Objects.equals(tasks, that.tasks) && Objects.equals(epics, that.epics) && Objects.equals(subtasks, that.subtasks);
     }
 
     @Override
@@ -367,11 +396,6 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public String toString() {
-        return InMemoryTaskManager.class.getName() + " { " +
-                "currentId = " + currentId + ", " +
-                "taskList = " + tasks + ", " +
-                "epicList = " + epics + ", " +
-                "subtaskList = " + subtasks +
-                " }";
+        return InMemoryTaskManager.class.getName() + " { " + "currentId = " + currentId + ", " + "taskList = " + tasks + ", " + "epicList = " + epics + ", " + "subtaskList = " + subtasks + " }";
     }
 }
