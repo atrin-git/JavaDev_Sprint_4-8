@@ -4,6 +4,10 @@ import com.taskmanager.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -604,5 +608,171 @@ class InMemoryTaskManagerTest {
 
         assertEquals(4, taskManager.getEpics().size(), "Ожидался список из 3 элементов");
         assertFalse(taskManager.getEpics().stream().filter(e -> e.getId().equals(24)).findFirst().isEmpty(), "Идентификатор обновлен некорректно");
+    }
+
+    @Test
+    public void checkAddNewTaskWithTime() {
+        LocalDateTime dt = LocalDateTime.now();
+        Duration duration = Duration.ofMinutes(30);
+        Task task = new Task(1, "TaskName", dt, duration);
+
+        taskManager.addTask(task);
+
+        assertTrue(taskManager.getTasks().contains(task));
+        assertEquals(dt, taskManager.getTaskById(task.getId()).getStartTime());
+        assertEquals(duration, taskManager.getTaskById(task.getId()).getDuration());
+    }
+
+    @Test
+    public void checkAddNewSubtaskWithTime() {
+        LocalDateTime dt = LocalDateTime.now();
+        Duration duration = Duration.ofMinutes(30);
+        Epic epic = new Epic(1, "Epic");
+        taskManager.addEpic(epic);
+
+        Subtask subtask = new Subtask(2, "TaskName", epic.getId(), dt, duration);
+        taskManager.addSubtask(subtask);
+
+        assertTrue(taskManager.getSubtasks().contains(subtask));
+        assertEquals(dt, taskManager.getSubtaskById(subtask.getId()).getStartTime());
+        assertEquals(duration, taskManager.getSubtaskById(subtask.getId()).getDuration());
+    }
+
+    @Test
+    public void checkCalculateEpicStartTimeAndDirection() {
+        LocalDateTime dt1 = LocalDateTime.of(LocalDate.of(2025, 1, 10), LocalTime.of(10, 0, 0));
+        LocalDateTime dt2 = LocalDateTime.of(LocalDate.of(2025, 1, 12), LocalTime.of(16, 0, 0));
+
+        Duration duration1 = Duration.ofMinutes(30);
+        Duration duration2 = Duration.ofMinutes(60);
+
+        Epic epic = new Epic(1, "Epic");
+        taskManager.addEpic(epic);
+
+        Subtask subtask1 = new Subtask(2, "TaskName1", "desc", epic.getId(), dt1, duration1);
+        Subtask subtask2 = new Subtask(3, "TaskName2", "desc", epic.getId(), dt2, duration2);
+        taskManager.addSubtask(subtask1);
+        taskManager.addSubtask(subtask2);
+
+        assertEquals(dt1, taskManager.getEpicById(epic.getId()).getStartTime());
+        assertEquals(dt2.plus(duration2), taskManager.getEpicById(epic.getId()).getEndTime());
+    }
+
+    @Test
+    public void checkOverlapTasks() {
+        LocalDateTime dt1 = LocalDateTime.of(LocalDate.of(2025, 1, 10), LocalTime.of(10, 0, 0));
+        LocalDateTime dt2 = LocalDateTime.of(LocalDate.of(2025, 1, 10), LocalTime.of(10, 30, 0));
+        LocalDateTime dt3 = LocalDateTime.of(LocalDate.of(2025, 1, 10), LocalTime.of(11, 0, 0));
+
+        Duration duration30 = Duration.ofMinutes(30);
+        Duration duration60 = Duration.ofMinutes(60);
+        Duration duration90 = Duration.ofMinutes(60);
+
+        Epic epic = new Epic(1, "Epic");
+        taskManager.addEpic(epic);
+
+        Subtask subtask1 = new Subtask(2, "TaskName1", "desc", epic.getId(), dt1, duration60);
+        Subtask subtask2 = new Subtask(3, "TaskName2", "desc", epic.getId(), dt3, duration90);
+        Subtask subtask3 = new Subtask(4, "TaskName3", "desc", epic.getId(), dt2, duration30);
+        taskManager.addSubtask(subtask1);
+        taskManager.addSubtask(subtask2);
+        taskManager.addSubtask(subtask3);
+
+        assertFalse(taskManager.getSubtasks().contains(subtask3));
+    }
+
+    @Test
+    public void checkEpicStartTimeChanged() {
+        LocalDateTime dt1 = LocalDateTime.of(LocalDate.of(2025, 1, 10), LocalTime.of(10, 0, 0));
+        LocalDateTime dt2 = LocalDateTime.of(LocalDate.of(2025, 1, 12), LocalTime.of(16, 0, 0));
+
+        Duration duration1 = Duration.ofMinutes(30);
+        Duration duration2 = Duration.ofMinutes(60);
+
+        Epic epic = new Epic(1, "Epic");
+        taskManager.addEpic(epic);
+
+        Subtask subtask1 = new Subtask(2, "TaskName1", "desc", epic.getId(), dt1, duration1);
+        Subtask subtask2 = new Subtask(3, "TaskName2", "desc", epic.getId(), dt2, duration2);
+        taskManager.addSubtask(subtask1);
+        taskManager.addSubtask(subtask2);
+
+        subtask1.setStatus(Status.DONE);
+        taskManager.editSubtask(subtask1);
+
+        assertEquals(dt2, taskManager.getEpicById(epic.getId()).getStartTime());
+        assertEquals(dt2.plus(duration2), taskManager.getEpicById(epic.getId()).getEndTime());
+    }
+
+    @Test
+    public void checkEpicEndTimeChanged() {
+        LocalDateTime dt1 = LocalDateTime.of(LocalDate.of(2025, 1, 10), LocalTime.of(10, 0, 0));
+        LocalDateTime dt2 = LocalDateTime.of(LocalDate.of(2025, 1, 12), LocalTime.of(16, 0, 0));
+
+        Duration duration1 = Duration.ofMinutes(30);
+        Duration duration2 = Duration.ofMinutes(60);
+
+        Epic epic = new Epic(1, "Epic");
+        taskManager.addEpic(epic);
+
+        Subtask subtask1 = new Subtask(2, "TaskName1", "desc", epic.getId(), dt1, duration1);
+        Subtask subtask2 = new Subtask(3, "TaskName2", "desc", epic.getId(), dt2, duration2);
+        taskManager.addSubtask(subtask1);
+        taskManager.addSubtask(subtask2);
+
+        subtask2.setStatus(Status.DONE);
+        taskManager.editSubtask(subtask2);
+
+        assertEquals(dt1, taskManager.getEpicById(epic.getId()).getStartTime());
+        assertEquals(dt1.plus(duration1), taskManager.getEpicById(epic.getId()).getEndTime());
+    }
+
+    @Test
+    public void checkGetPrioritizedTasks() {
+        LocalDateTime dt1 = LocalDateTime.of(LocalDate.of(2025, 1, 10), LocalTime.of(10, 0, 0));
+        LocalDateTime dt2 = LocalDateTime.of(LocalDate.of(2025, 1, 12), LocalTime.of(16, 0, 0));
+
+        Duration duration1 = Duration.ofMinutes(30);
+        Duration duration2 = Duration.ofMinutes(60);
+
+        Epic epic = new Epic(1, "Epic");
+        taskManager.addEpic(epic);
+
+        Task task = new Task(2, "TaskName", "desc", dt1, duration1);
+        Subtask subtask = new Subtask(3, "TaskName", "desc", epic.getId(), dt2, duration2);
+        taskManager.addTask(task);
+        taskManager.addSubtask(subtask);
+
+        List<AbstractTask> prioritizedTasks = taskManager.getPrioritizedTasks();
+
+        assertTrue(prioritizedTasks.contains(task));
+        assertTrue(prioritizedTasks.contains(subtask));
+        assertEquals(prioritizedTasks.get(0), task);
+    }
+
+    @Test
+    public void checkTaskWithNoTimeNotAddedToPrioritizedTasks() {
+        LocalDateTime dt1 = LocalDateTime.of(LocalDate.of(2025, 1, 10), LocalTime.of(10, 0, 0));
+        LocalDateTime dt2 = LocalDateTime.of(LocalDate.of(2025, 1, 12), LocalTime.of(16, 0, 0));
+
+        Duration duration1 = Duration.ofMinutes(30);
+        Duration duration2 = Duration.ofMinutes(60);
+
+        Epic epic = new Epic(1, "Epic");
+        taskManager.addEpic(epic);
+
+        Task task = new Task(2, "TaskName", "desc", dt1, duration1);
+        Subtask subtask1 = new Subtask(3, "TaskName1", "desc", epic.getId(), dt2, duration2);
+        Subtask subtask2 = new Subtask(4, "TaskName2", "desc", epic.getId());
+        taskManager.addTask(task);
+        taskManager.addSubtask(subtask1);
+        taskManager.addSubtask(subtask2);
+
+        List<AbstractTask> prioritizedTasks = taskManager.getPrioritizedTasks();
+
+        assertTrue(prioritizedTasks.contains(task));
+        assertTrue(prioritizedTasks.contains(subtask1));
+        assertFalse(prioritizedTasks.contains(subtask2));
+        assertEquals(prioritizedTasks.get(0), task);
     }
 }

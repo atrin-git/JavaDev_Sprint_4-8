@@ -160,22 +160,22 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 case TASK -> {
                     Task task = new Task(Integer.parseInt(words[0]), words[2], words[4]);
                     task.setStatus(Status.valueOf(words[3]));
-                    task.setStartTime(LocalDateTime.parse(words[6], DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                    task.setStartTime(!words[6].isEmpty() ? LocalDateTime.parse(words[6], DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null);
                     task.setDuration(Duration.ofSeconds(Integer.parseInt(words[7])));
                     return task;
                 }
                 case EPIC -> {
                     Epic epic = new Epic(Integer.parseInt(words[0]), words[2], words[4]);
                     epic.setStatus(Status.valueOf(words[3]));
-                    epic.setStartTime(LocalDateTime.parse(words[6], DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                    epic.setStartTime(!words[6].isEmpty() ? LocalDateTime.parse(words[6], DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null);
                     epic.setDuration(Duration.ofSeconds(Integer.parseInt(words[7])));
-                    epic.setEndTime(epic.getStartTime().plus(epic.getDuration()));
+                    epic.setEndTime(!words[6].isEmpty() ? epic.getStartTime().plus(epic.getDuration()) : null);
                     return epic;
                 }
                 case SUBTASK -> {
                     Subtask subtask = new Subtask(Integer.parseInt(words[0]), words[2], words[4], Integer.parseInt(words[5]));
                     subtask.setStatus(Status.valueOf(words[3]));
-                    subtask.setStartTime(LocalDateTime.parse(words[6], DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                    subtask.setStartTime(!words[6].isEmpty() ? LocalDateTime.parse(words[6], DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null);
                     subtask.setDuration(Duration.ofSeconds(Integer.parseInt(words[7])));
                     return subtask;
                 }

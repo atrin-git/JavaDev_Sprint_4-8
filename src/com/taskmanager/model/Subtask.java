@@ -61,11 +61,11 @@ public class Subtask extends AbstractTask {
     /**
      * Конструктор
      *
-     * @param id     Идентификатор
-     * @param name   Наименование
-     * @param epicId Идентификатор эпика для привязки
-     * @param startTime   Дата и время начала работы над задачей
-     * @param duration    Продолжительность работы с задачей
+     * @param id        Идентификатор
+     * @param name      Наименование
+     * @param epicId    Идентификатор эпика для привязки
+     * @param startTime Дата и время начала работы над задачей
+     * @param duration  Продолжительность работы с задачей
      */
     public Subtask(int id, String name, Integer epicId, LocalDateTime startTime, Duration duration) {
         super(id, name, startTime, duration);
@@ -100,10 +100,20 @@ public class Subtask extends AbstractTask {
         this.epicId = epicId;
     }
 
+    /**
+     * Получение идентификатора эпика
+     *
+     * @return Идентификатор
+     */
     public Integer getEpicId() {
         return epicId;
     }
 
+    /**
+     * Установка идентификатора эпика
+     *
+     * @param epicId Идентификатор
+     */
     public void setEpicId(Integer epicId) {
         this.epicId = epicId;
     }

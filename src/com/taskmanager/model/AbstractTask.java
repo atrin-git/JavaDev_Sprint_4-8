@@ -75,7 +75,7 @@ public abstract class AbstractTask {
      * @param description Описание
      */
     public AbstractTask(Integer id, String name, String description) {
-        this(id, name, description, LocalDateTime.now(), Duration.ZERO);
+        this(id, name, description, null, Duration.ZERO);
     }
 
     /**
@@ -189,9 +189,6 @@ public abstract class AbstractTask {
      */
     public void setStatus(Status status) {
         this.status = status;
-        if (status.equals(Status.DONE)) {
-            this.setDuration(Duration.between(this.startTime, LocalDateTime.now()));
-        }
     }
 
     /**
