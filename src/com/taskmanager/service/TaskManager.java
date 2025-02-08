@@ -172,13 +172,6 @@ public interface TaskManager {
     void correctEpicStatus(int epicId);
 
     /**
-     * Корректировка продолжительности работы по эпику
-     *
-     * @param epic Объект эпика
-     */
-    void correctEpicDuration(Epic epic);
-
-    /**
      * Получение списка задач, отсортированного по приоритету
      *
      * @return Отсортированный список задач

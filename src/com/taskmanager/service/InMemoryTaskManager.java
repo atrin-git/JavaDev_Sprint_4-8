@@ -122,13 +122,14 @@ public class InMemoryTaskManager implements TaskManager {
             System.out.println("Передана задача без id. Невозможно обновить");
             return;
         }
+        boolean inTaskInPrioritizedList = prioritizedTasks.stream().map(AbstractTask::getId).anyMatch(id -> task.getId().equals(id));
 
-        if (prioritizedTasks.stream().map(AbstractTask::getId).noneMatch(id -> task.getId().equals(id))) {
-            if (isTasksOverlap(task)) {
-                System.out.println("Задача пересекается по времени с уже добавленными задачами");
-                return;
-            }
-        } else {
+        if (!inTaskInPrioritizedList && isTasksOverlap(task)) {
+            System.out.println("Задача пересекается по времени с уже добавленными задачами");
+            return;
+        }
+
+        if (inTaskInPrioritizedList) {
             final Task priTask = (Task) prioritizedTasks.stream().filter(t -> t.getId().equals(task.getId())).findFirst().orElseThrow();
             if (!priTask.getStartTime().equals(task.getStartTime())
                     || !priTask.getDuration().equals(task.getDuration())) {
@@ -176,12 +177,14 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
 
-        if (prioritizedTasks.stream().map(AbstractTask::getId).noneMatch(id -> subtask.getId().equals(id))) {
-            if (isTasksOverlap(subtask)) {
-                System.out.println("Подзадача пересекается по времени с уже добавленными задачами");
-                return;
-            }
-        } else {
+        boolean isSubtaskInPrioritizedList = prioritizedTasks.stream().map(AbstractTask::getId).anyMatch(id -> subtask.getId().equals(id));
+
+        if (!isSubtaskInPrioritizedList && isTasksOverlap(subtask)) {
+            System.out.println("Подзадача пересекается по времени с уже добавленными задачами");
+            return;
+        }
+
+        if (isSubtaskInPrioritizedList) {
             final Subtask priSubtask = (Subtask) prioritizedTasks.stream().filter(task -> task.getId().equals(subtask.getId())).findFirst().orElseThrow();
             if (!priSubtask.getStartTime().equals(subtask.getStartTime())
                     || !priSubtask.getDuration().equals(subtask.getDuration())) {
@@ -435,7 +438,16 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void correctEpicDuration(Epic epic) {
+    public List<AbstractTask> getPrioritizedTasks() {
+        return List.copyOf(prioritizedTasks);
+    }
+
+    @Override
+    public List<AbstractTask> getHistory() {
+        return List.copyOf(historyManager.getHistory());
+    }
+
+    private void correctEpicDuration(Epic epic) {
         final List<Subtask> subtaskList = getSubtaskListByEpicId(epic.getId());
 
         final List<Subtask> subtaskWithTime = subtaskList.stream().filter(subtask -> subtask.getStartTime() != null && !subtask.getStatus().equals(Status.DONE)).toList();
@@ -459,16 +471,6 @@ public class InMemoryTaskManager implements TaskManager {
         // set duration
         Duration duration = Duration.between(startTime, endTime);
         epic.setDuration(duration);
-    }
-
-    @Override
-    public List<AbstractTask> getPrioritizedTasks() {
-        return List.copyOf(prioritizedTasks);
-    }
-
-    @Override
-    public List<AbstractTask> getHistory() {
-        return List.copyOf(historyManager.getHistory());
     }
 
     private boolean isTasksOverlap(AbstractTask abstractTask) {
