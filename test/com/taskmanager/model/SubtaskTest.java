@@ -2,7 +2,8 @@ package com.taskmanager.model;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class SubtaskTest {
 
     @Test
@@ -29,5 +30,5 @@ class SubtaskTest {
 
         assertEquals(subtask, subtaskToCompare, "Два эпика с одинаковым id должны быть эквивалентны");
     }
-  
+
 }

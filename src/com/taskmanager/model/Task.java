@@ -1,5 +1,9 @@
 package com.taskmanager.model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * Дата-класс для задачи
  */
@@ -46,12 +50,37 @@ public class Task extends AbstractTask {
     /**
      * Конструктор
      *
+     * @param id        Идентификатор
+     * @param name      Наименование
+     * @param startTime Дата и время начала работы над задачей
+     * @param duration  Продолжительность работы с задачей
+     */
+    public Task(int id, String name, LocalDateTime startTime, Duration duration) {
+        super(id, name, startTime, duration);
+    }
+
+    /**
+     * Конструктор
+     *
      * @param id          Идентификатор
      * @param name        Наименование
      * @param description Описание
      */
     public Task(int id, String name, String description) {
         super(id, name, description);
+    }
+
+    /**
+     * Конструктор
+     *
+     * @param id          Идентификатор
+     * @param name        Наименование
+     * @param description Описание
+     * @param startTime   Дата и время начала работы над задачей
+     * @param duration    Продолжительность работы с задачей
+     */
+    public Task(int id, String name, String description, LocalDateTime startTime, Duration duration) {
+        super(id, name, description, startTime, duration);
     }
 
     /**
@@ -67,6 +96,8 @@ public class Task extends AbstractTask {
                 /* name */          getName(),
                 /* status */        getStatus().toString(),
                 /* description */   getDescription() != null ? getDescription() : "",
-                /* epic */          "");
+                /* epic */          "",
+                /* start_date */    getStartTime() != null ? getStartTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : "",
+                /* duration */      String.valueOf(getDuration().toSeconds()));
     }
 }

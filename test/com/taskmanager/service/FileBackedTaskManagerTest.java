@@ -11,12 +11,13 @@ import java.io.*;
 import java.nio.file.Files;
 import java.util.List;
 
+import static com.taskmanager.service.Managers.loadFromFile;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FileBackedTaskManagerTest {
 
     private File file;
-    private final Task task = new Task(1, "Задача", "Описание залачи");
+    private final Task task = new Task(1, "Задача", "Описание задачи");
     private final Epic epic = new Epic(2, "Эпик", "Описание эпика");
     private final Subtask subtask = new Subtask(3, "Подзадача", "Описание подзадачи", 2);
 
@@ -40,7 +41,7 @@ public class FileBackedTaskManagerTest {
 
     @Test
     public void checkReadFromFileAnyTypes() {
-        TaskManager taskManager = Managers.loadFromFile(file);
+        TaskManager taskManager = loadFromFile(file);
 
         assertTrue(taskManager.getTasks().contains(task), "Задача не была добавлена из файла в таск-менеджер");
         assertTrue(taskManager.getEpics().contains(epic), "Эпик не был добавлен из файла в таск-менеджер");
@@ -48,26 +49,10 @@ public class FileBackedTaskManagerTest {
     }
 
     @Test
-    public void checkReadFromFileWrongType() throws IOException {
-        FileWriter writer = new FileWriter(file, true);
-        writer.append("4,TYPE,Неправильного типа задача,NEW,,");
-        writer.close();
-
-        TaskManager taskManager = null;
-        try {
-            taskManager = Managers.loadFromFile(file);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
-        }
-
-        assertNull(taskManager, "Таск-менеджер не должен заполняться");
-    }
-
-    @Test
     public void checkSaveTask() throws IOException {
         Task tempTask = new Task(4, "Проверочная задача");
 
-        TaskManager taskManager = Managers.loadFromFile(file);
+        TaskManager taskManager = loadFromFile(file);
         taskManager.addTask(tempTask);
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -81,7 +66,7 @@ public class FileBackedTaskManagerTest {
     public void checkSaveEpic() throws IOException {
         Epic tempEpic = new Epic(5, "Проверочный эпик");
 
-        TaskManager taskManager = Managers.loadFromFile(file);
+        TaskManager taskManager = loadFromFile(file);
         taskManager.addEpic(tempEpic);
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -95,7 +80,7 @@ public class FileBackedTaskManagerTest {
     public void checkSaveSubtask() throws IOException {
         Subtask tempSubtask = new Subtask(6, "Проверочная подзадача", 2);
 
-        TaskManager taskManager = Managers.loadFromFile(file);
+        TaskManager taskManager = loadFromFile(file);
         taskManager.addSubtask(tempSubtask);
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -109,7 +94,7 @@ public class FileBackedTaskManagerTest {
     public void checkEditTask() throws IOException {
         Task tempTask = new Task(1, "Проверочная задача");
 
-        TaskManager taskManager = Managers.loadFromFile(file);
+        TaskManager taskManager = loadFromFile(file);
         taskManager.editTask(tempTask);
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -123,7 +108,7 @@ public class FileBackedTaskManagerTest {
     public void checkEditEpic() throws IOException {
         Epic tempEpic = new Epic(2, "Изменения");
 
-        TaskManager taskManager = Managers.loadFromFile(file);
+        TaskManager taskManager = loadFromFile(file);
         taskManager.editEpic(tempEpic);
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -137,7 +122,7 @@ public class FileBackedTaskManagerTest {
     public void checkEditSubtask() throws IOException {
         Subtask tempSubtask = new Subtask(3, "Изменения", 2);
 
-        TaskManager taskManager = Managers.loadFromFile(file);
+        TaskManager taskManager = loadFromFile(file);
         taskManager.editSubtask(tempSubtask);
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -149,7 +134,7 @@ public class FileBackedTaskManagerTest {
 
     @Test
     public void checkDeleteTask() throws IOException {
-        TaskManager taskManager = Managers.loadFromFile(file);
+        TaskManager taskManager = loadFromFile(file);
         taskManager.deleteTaskById(1);
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -161,7 +146,7 @@ public class FileBackedTaskManagerTest {
 
     @Test
     public void checkDeleteEpic() throws IOException {
-        TaskManager taskManager = Managers.loadFromFile(file);
+        TaskManager taskManager = loadFromFile(file);
         taskManager.deleteEpicById(2);
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -173,7 +158,7 @@ public class FileBackedTaskManagerTest {
 
     @Test
     public void checkDeleteSubtask() throws IOException {
-        TaskManager taskManager = Managers.loadFromFile(file);
+        TaskManager taskManager = loadFromFile(file);
         taskManager.deleteSubtaskById(3);
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -185,7 +170,7 @@ public class FileBackedTaskManagerTest {
 
     @Test
     public void checkDeleteAllTasks() throws IOException {
-        TaskManager taskManager = Managers.loadFromFile(file);
+        TaskManager taskManager = loadFromFile(file);
         taskManager.deleteAllTasks();
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -197,7 +182,7 @@ public class FileBackedTaskManagerTest {
 
     @Test
     public void checkDeleteAllEpics() throws IOException {
-        TaskManager taskManager = Managers.loadFromFile(file);
+        TaskManager taskManager = loadFromFile(file);
         taskManager.deleteAllEpics();
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -209,7 +194,7 @@ public class FileBackedTaskManagerTest {
 
     @Test
     public void checkDeleteAllSubtasks() throws IOException {
-        TaskManager taskManager = Managers.loadFromFile(file);
+        TaskManager taskManager = loadFromFile(file);
         taskManager.deleteAllSubtasks();
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -221,7 +206,7 @@ public class FileBackedTaskManagerTest {
 
     @Test
     public void checkDeleteAllSubtasksInEpic() throws IOException {
-        TaskManager taskManager = Managers.loadFromFile(file);
+        TaskManager taskManager = loadFromFile(file);
         taskManager.deleteAllSubtasksInEpic(2);
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -230,6 +215,26 @@ public class FileBackedTaskManagerTest {
         assertFalse(taskManager.getSubtasks().contains(subtask), "Подзадача не была удалена из таск-менеджера");
         assertEquals(0, taskManager.getEpicById(2).getSubtaskList().size(), "В эпике остались подзадачи");
         assertFalse(text.contains(subtask.toString()), "Подзадача не была удалена из файла");
+    }
+
+    @Test
+    public void checkExceptionCreateFileWriter() {
+        File fileWrong = new File("");
+
+        assertThrows(ManagerReadException.class, () -> {
+            loadFromFile(fileWrong);
+        }, "Должно было появиться исключение типа " + ManagerReadException.class.getSimpleName());
+    }
+
+    @Test
+    public void checkExceptionReadFromFileWrongType() throws IOException {
+        FileWriter writer = new FileWriter(file, true);
+        writer.append("4,TYPE,Неправильного типа задача,NEW,,");
+        writer.close();
+
+        assertThrows(ManagerReadException.class, () -> {
+            loadFromFile(file);
+        }, "Должно было появиться исключение типа " + ManagerReadException.class.getSimpleName());
     }
 
 }

@@ -1,5 +1,7 @@
 package com.taskmanager.model;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,11 @@ public class Epic extends AbstractTask {
     private final List<Integer> subtaskList;
 
     /**
+     * Дата и время окончания работы над эпиком
+     */
+    private LocalDateTime endTime;
+
+    /**
      * Конструктор копирования
      *
      * @param epic Объект, для которого требуется создать копию
@@ -20,6 +27,7 @@ public class Epic extends AbstractTask {
     public Epic(Epic epic) {
         super(epic);
         this.subtaskList = new ArrayList<>(epic.getSubtaskList());
+        this.endTime = epic.getEndTime();
     }
 
     /**
@@ -101,6 +109,22 @@ public class Epic extends AbstractTask {
     }
 
     /**
+     * Получить дату и время окончания работы над эпиком
+     *
+     * @return Дата и время окончания работы над эпиком
+     */
+    public LocalDateTime getEndTime() {
+        return this.endTime;
+    }
+
+    /**
+     * Установить дату и время окончания работы над эпиком
+     */
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    /**
      * Представление объекта эпика в виде строки
      *
      * @return Строка, описывающая объект эпика
@@ -113,6 +137,8 @@ public class Epic extends AbstractTask {
                 /* name */          getName(),
                 /* status */        getStatus().toString(),
                 /* description */   getDescription() != null ? getDescription() : "",
-                /* epic */          "");
+                /* epic */          "",
+                /* start_date */    getStartTime() != null ? getStartTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : "",
+                /* duration */      String.valueOf(getDuration().toSeconds()));
     }
 }

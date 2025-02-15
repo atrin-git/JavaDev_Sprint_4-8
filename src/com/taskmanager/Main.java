@@ -19,10 +19,12 @@ public class Main {
         // Проверка добавления задач
         scenarios.testAdd(taskManager);
         scenarios.testGetTasks(taskManager);
+        scenarios.testGetPrioritizedTasks(taskManager);
 
         // Проверка изменения задач
         scenarios.testEdit(taskManager);
         scenarios.testGetTasks(taskManager);
+        scenarios.testGetPrioritizedTasks(taskManager);
 
         // Проверка обновления статусов
         scenarios.updateStatuses(taskManager);

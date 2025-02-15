@@ -1,8 +1,11 @@
 package com.taskmanager.service;
 
-import com.taskmanager.model.*;
+import com.taskmanager.model.AbstractTask;
+import com.taskmanager.model.Epic;
+import com.taskmanager.model.Subtask;
+import com.taskmanager.model.Task;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Интерфейс, обеспечивающий работу с задачами
@@ -110,7 +113,7 @@ public interface TaskManager {
     void deleteAllSubtasksInEpic(int epicId);
 
     /**
-     * Получение задачи по индентификатору
+     * Получение задачи по идентификатору
      *
      * @param id Идентификатор
      * @return Задача
@@ -157,7 +160,7 @@ public interface TaskManager {
     /**
      * Получение номера (идентификатора) для задачи
      *
-     * @return Идентификтор
+     * @return Идентификатор
      */
     int getNextId();
 
@@ -167,6 +170,13 @@ public interface TaskManager {
      * @param epicId Идентификатор эпика
      */
     void correctEpicStatus(int epicId);
+
+    /**
+     * Получение списка задач, отсортированного по приоритету
+     *
+     * @return Отсортированный список задач
+     */
+    List<AbstractTask> getPrioritizedTasks();
 
     /**
      * Получение истории просмотра задач (последние 10 задач)

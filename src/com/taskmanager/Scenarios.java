@@ -3,33 +3,62 @@ package com.taskmanager;
 import com.taskmanager.model.*;
 import com.taskmanager.service.TaskManager;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 public class Scenarios {
 
+    private List<LocalDateTime> dateTimes = List.of(
+            LocalDateTime.of(LocalDate.of(2025, 1, 1), LocalTime.of(13, 10, 25)),
+            LocalDateTime.of(LocalDate.of(2025, 1, 1), LocalTime.of(16, 30, 30)),
+            LocalDateTime.of(LocalDate.of(2025, 1, 2), LocalTime.of(13, 10, 25)),
+            LocalDateTime.of(LocalDate.of(2025, 1, 3), LocalTime.of(13, 10, 25)),
+            LocalDateTime.of(LocalDate.of(2025, 1, 4), LocalTime.of(13, 10, 25)),
+            LocalDateTime.of(LocalDate.of(2025, 1, 5), LocalTime.of(9, 15, 0)),
+            LocalDateTime.of(LocalDate.of(2025, 1, 6), LocalTime.of(9, 15, 0)),
+            LocalDateTime.of(LocalDate.of(2025, 1, 7), LocalTime.of(9, 15, 0)),
+            LocalDateTime.of(LocalDate.of(2025, 1, 8), LocalTime.of(9, 15, 0)),
+            LocalDateTime.of(LocalDate.of(2025, 1, 9), LocalTime.of(9, 15, 0)),
+            LocalDateTime.of(LocalDate.of(2025, 1, 10), LocalTime.of(20, 30, 40)),
+            LocalDateTime.of(LocalDate.of(2025, 1, 11), LocalTime.of(20, 30, 40)),
+            LocalDateTime.of(LocalDate.of(2025, 1, 12), LocalTime.of(20, 30, 40)),
+            LocalDateTime.of(LocalDate.of(2025, 1, 13), LocalTime.of(20, 30, 40)),
+            LocalDateTime.of(LocalDate.of(2025, 1, 14), LocalTime.of(20, 30, 40))
+    );
+
+    private List<Duration> durations = List.of(
+            Duration.ofMinutes(30),
+            Duration.ofMinutes(60),
+            Duration.ofMinutes(90)
+    );
+
     private final List<Task> testTaskList = List.of(
-            new Task(1, "Ответить на письма"),
-            new Task(2, "Отправить посылку по почте", "Адрес получателя в личном кабинете")
+            new Task(1, "Ответить на письма", dateTimes.get(0), durations.get(0)),
+            new Task(2, "Отправить посылку по почте", "Адрес получателя в личном кабинете", dateTimes.get(1), durations.get(1)),
+            new Task(17, "Получить посылку", dateTimes.get(0), durations.get(1))
     );
 
     private final List<Epic> testEpicList = List.of(
             new Epic(3, "Сделать уборку"),
             new Epic(4, "Пройти спринт на Практикуме"),
-            new Epic(5, "Пройти спринт 6 на Практикуме", "Пройти его уже наконец-то"),
+            new Epic(5, "Пройти спринт 9 на Практикуме", "Пройти его уже наконец-то"),
             new Epic(6, "Глобальная задача без плана", "Нет плана - нет пунктов")
     );
 
     private final List<Subtask> testSubtaskList = List.of(
-            new Subtask(7, "Вытереть пыль", "Для мониторов не забыть использовать специальную жидкость", testEpicList.get(0).getId()),
-            new Subtask(8, "Помыть полы", testEpicList.get(0).getId()),
-            new Subtask(9, "Вымыть сантехнику", testEpicList.get(0).getId()),
-            new Subtask(10, "Вынести мусор", testEpicList.get(0).getId()),
-            new Subtask(11, "Пройти теорию", testEpicList.get(1).getId()),
-            new Subtask(12, "Посетить вебинар", testEpicList.get(1).getId()),
-            new Subtask(13, "Выполнить практику", testEpicList.get(1).getId()),
-            new Subtask(14, "Написать список", testEpicList.get(2).getId()),
-            new Subtask(15, "Слинковать с мапой", testEpicList.get(2).getId()),
-            new Subtask(16, "Исправить другие методы", testEpicList.get(2).getId())
+            new Subtask(7, "Вытереть пыль", "Для мониторов не забыть использовать специальную жидкость", testEpicList.get(0).getId(), dateTimes.get(2), durations.get(0)),
+            new Subtask(8, "Помыть полы", testEpicList.get(0).getId(), dateTimes.get(3), durations.get(1)),
+            new Subtask(9, "Вымыть сантехнику", testEpicList.get(0).getId(), dateTimes.get(8), durations.get(2)),
+            new Subtask(10, "Вынести мусор", testEpicList.get(0).getId(), dateTimes.get(7), durations.get(0)),
+            new Subtask(11, "Пройти теорию", testEpicList.get(1).getId(), dateTimes.get(6), durations.get(1)),
+            new Subtask(12, "Посетить вебинар", testEpicList.get(1).getId(), dateTimes.get(5), durations.get(2)),
+            new Subtask(13, "Выполнить практику", testEpicList.get(1).getId(), dateTimes.get(4), durations.get(0)),
+            new Subtask(14, "Написать список", testEpicList.get(2).getId(), dateTimes.get(9), durations.get(1)),
+            new Subtask(15, "Слинковать с мапой", testEpicList.get(2).getId(), dateTimes.get(9), durations.get(2)),
+            new Subtask(16, "Исправить другие методы", testEpicList.get(2).getId(), dateTimes.get(10), durations.get(0))
     );
 
     public void testAdd(TaskManager taskManager) {
@@ -53,7 +82,7 @@ public class Scenarios {
         System.out.println("2. Редактирование задач, эпиков и подзадач.");
         taskManager.editTask(new Task(testTaskList.get(1).getId(), "Отправить посылку через СДЭК"));
         taskManager.editEpic(new Epic(testEpicList.get(1).getId(), "Пройти спринт на Практикуме", "5 спринт"));
-        taskManager.editSubtask(new Subtask(testSubtaskList.get(3).getId(), "Вынести мусор из всех комнат", "Кабинет кухня ванная", testSubtaskList.get(3).getEpicId()));
+        taskManager.editSubtask(new Subtask(testSubtaskList.get(3).getId(), "Вынести мусор из всех комнат", "Кабинет кухня ванная", testSubtaskList.get(3).getEpicId(), dateTimes.get(12), durations.get(0)));
         System.out.println();
     }
 
@@ -62,6 +91,12 @@ public class Scenarios {
         System.out.println("Задачи: " + taskManager.getTasks().toString());
         System.out.println("Эпики: " + taskManager.getEpics().toString());
         System.out.println("Подзадачи: " + taskManager.getSubtasks().toString());
+        System.out.println();
+    }
+
+    public void testGetPrioritizedTasks(TaskManager taskManager) {
+        System.out.println("Приоритизированный перечень задач и подзадач:");
+        System.out.println(taskManager.getPrioritizedTasks().toString());
         System.out.println();
     }
 
@@ -158,7 +193,7 @@ public class Scenarios {
         System.out.println("5. Удаление задач, эпиков и подзадач.");
 
         taskManager.deleteTaskById(1);
-        taskManager.deleteSubtaskById(7);
+        taskManager.deleteSubtaskById(10);
         taskManager.deleteEpicById(4);
         taskManager.deleteAllTasks();
         taskManager.deleteAllSubtasks();
