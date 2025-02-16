@@ -1,7 +1,6 @@
 package com.taskmanager.service;
 
 import com.sun.net.httpserver.HttpServer;
-import com.taskmanager.Scenarios;
 import com.taskmanager.service.handlers.*;
 import com.taskmanager.service.managers.TaskManager;
 
@@ -10,19 +9,18 @@ import java.net.InetSocketAddress;
 
 
 public class HttpTaskServer {
-    private static final int PORT = 8082;
+    private static final int PORT = 8083;
     private final HttpServer server;
     private final TaskManager manager;
 
     public HttpTaskServer(TaskManager manager) throws IOException {
         this.manager = manager;
         this.server = HttpServer.create(new InetSocketAddress(PORT), 0);
-        // Добавление задач для тестирования
-        setTestData(manager);
     }
 
-    private void setTestData(TaskManager manager) {
-        new Scenarios().testAdd(manager);
+    public HttpTaskServer(TaskManager manager, Integer port) throws IOException {
+        this.manager = manager;
+        this.server = HttpServer.create(new InetSocketAddress(port), 0);
     }
 
     public void start() {

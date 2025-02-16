@@ -99,6 +99,10 @@ public class InMemoryTaskManager implements TaskManager {
             throw new TimeOverlapException("Подзадача пересекается по времени с уже добавленными задачами");
         }
 
+        if (!epics.containsKey(subtask.getEpicId())) {
+            throw new NotFoundException("Не найден эпик с id = " + subtask.getEpicId());
+        }
+
         if (subtask.getId() != null) {
             updateCurrentId(subtask.getId());
         } else {

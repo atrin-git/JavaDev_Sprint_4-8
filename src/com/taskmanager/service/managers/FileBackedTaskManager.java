@@ -183,7 +183,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
             }
         } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            throw new ManagerReadException(e.getMessage());
         }
 
         return null;

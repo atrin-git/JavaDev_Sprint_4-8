@@ -40,6 +40,18 @@ public class Task extends AbstractTask {
     /**
      * Конструктор
      *
+     * @param name        Наименование
+     * @param description Описание
+     * @param startTime   Дата и время начала работы над задачей
+     * @param duration    Продолжительность работы с задачей
+     */
+    public Task(String name, String description, LocalDateTime startTime, Duration duration) {
+        super(null, name, description, startTime, duration);
+    }
+
+    /**
+     * Конструктор
+     *
      * @param id   Идентификатор
      * @param name Наименование
      */

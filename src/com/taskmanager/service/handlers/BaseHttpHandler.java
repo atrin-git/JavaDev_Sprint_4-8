@@ -97,7 +97,6 @@ public class BaseHttpHandler {
         sendMessage(exchange, text, 500);
     }
 
-
     /**
      * Метод для отправки HTTP-ответа
      *
