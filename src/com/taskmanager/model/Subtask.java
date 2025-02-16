@@ -53,7 +53,7 @@ public class Subtask extends AbstractTask {
      * @param name   Наименование
      * @param epicId Идентификатор эпика для привязки
      */
-    public Subtask(int id, String name, Integer epicId) {
+    public Subtask(Integer id, String name, Integer epicId) {
         super(id, name);
         this.epicId = epicId;
     }
@@ -67,7 +67,7 @@ public class Subtask extends AbstractTask {
      * @param startTime Дата и время начала работы над задачей
      * @param duration  Продолжительность работы с задачей
      */
-    public Subtask(int id, String name, Integer epicId, LocalDateTime startTime, Duration duration) {
+    public Subtask(Integer id, String name, Integer epicId, LocalDateTime startTime, Duration duration) {
         super(id, name, startTime, duration);
         this.epicId = epicId;
     }
@@ -80,7 +80,7 @@ public class Subtask extends AbstractTask {
      * @param description Описание
      * @param epicId      Идентификатор эпика для привязки
      */
-    public Subtask(int id, String name, String description, Integer epicId) {
+    public Subtask(Integer id, String name, String description, Integer epicId) {
         super(id, name, description);
         this.epicId = epicId;
     }
@@ -95,7 +95,7 @@ public class Subtask extends AbstractTask {
      * @param startTime   Дата и время начала работы над задачей
      * @param duration    Продолжительность работы с задачей
      */
-    public Subtask(int id, String name, String description, Integer epicId, LocalDateTime startTime, Duration duration) {
+    public Subtask(Integer id, String name, String description, Integer epicId, LocalDateTime startTime, Duration duration) {
         super(id, name, description, startTime, duration);
         this.epicId = epicId;
     }

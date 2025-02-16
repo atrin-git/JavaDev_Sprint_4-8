@@ -1,7 +1,7 @@
 package com.taskmanager;
 
 import com.taskmanager.model.*;
-import com.taskmanager.service.TaskManager;
+import com.taskmanager.service.managers.TaskManager;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -37,8 +37,8 @@ public class Scenarios {
 
     private final List<Task> testTaskList = List.of(
             new Task(1, "Ответить на письма", dateTimes.get(0), durations.get(0)),
-            new Task(2, "Отправить посылку по почте", "Адрес получателя в личном кабинете", dateTimes.get(1), durations.get(1)),
-            new Task(17, "Получить посылку", dateTimes.get(0), durations.get(1))
+            new Task(2, "Отправить посылку по почте", "Адрес получателя в личном кабинете", dateTimes.get(1), durations.get(1))
+//            new Task(17, "Получить посылку", dateTimes.get(0), durations.get(1))
     );
 
     private final List<Epic> testEpicList = List.of(
@@ -57,7 +57,7 @@ public class Scenarios {
             new Subtask(12, "Посетить вебинар", testEpicList.get(1).getId(), dateTimes.get(5), durations.get(2)),
             new Subtask(13, "Выполнить практику", testEpicList.get(1).getId(), dateTimes.get(4), durations.get(0)),
             new Subtask(14, "Написать список", testEpicList.get(2).getId(), dateTimes.get(9), durations.get(1)),
-            new Subtask(15, "Слинковать с мапой", testEpicList.get(2).getId(), dateTimes.get(9), durations.get(2)),
+//            new Subtask(15, "Слинковать с мапой", testEpicList.get(2).getId(), dateTimes.get(9), durations.get(2)),
             new Subtask(16, "Исправить другие методы", testEpicList.get(2).getId(), dateTimes.get(10), durations.get(0))
     );
 

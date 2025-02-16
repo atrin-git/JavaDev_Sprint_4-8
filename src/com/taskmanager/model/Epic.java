@@ -57,7 +57,7 @@ public class Epic extends AbstractTask {
      * @param id   Идентификатор
      * @param name Наименование
      */
-    public Epic(int id, String name) {
+    public Epic(Integer id, String name) {
         super(id, name);
         this.subtaskList = new ArrayList<>();
     }
@@ -69,7 +69,7 @@ public class Epic extends AbstractTask {
      * @param name        Наименование
      * @param description Описание
      */
-    public Epic(int id, String name, String description) {
+    public Epic(Integer id, String name, String description) {
         super(id, name, description);
         this.subtaskList = new ArrayList<>();
     }

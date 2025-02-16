@@ -103,7 +103,7 @@ public abstract class AbstractTask {
      * @param id   Идентификатор
      * @param name Имя
      */
-    public AbstractTask(int id, String name) {
+    public AbstractTask(Integer id, String name) {
         this(id, name, null);
     }
 
@@ -115,7 +115,7 @@ public abstract class AbstractTask {
      * @param startTime Дата и время начала работы над задачей
      * @param duration  Продолжительность работы с задачей
      */
-    public AbstractTask(int id, String name, LocalDateTime startTime, Duration duration) {
+    public AbstractTask(Integer id, String name, LocalDateTime startTime, Duration duration) {
         this(id, name, null, startTime, duration);
     }
 

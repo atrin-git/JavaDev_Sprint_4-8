@@ -2,6 +2,7 @@ package com.taskmanager.service;
 
 import com.taskmanager.model.Epic;
 import com.taskmanager.model.Task;
+import com.taskmanager.service.managers.InMemoryHistoryManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

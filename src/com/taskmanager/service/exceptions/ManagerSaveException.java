@@ -1,4 +1,4 @@
-package com.taskmanager.service;
+package com.taskmanager.service.exceptions;
 
 /**
  * Исключение в случае проблем с сохранением данных из таск-менеджера в файл
