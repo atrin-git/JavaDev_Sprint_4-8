@@ -87,17 +87,6 @@ public class BaseHttpHandler {
     }
 
     /**
-     * Отправка ответа, если произошла ошибка на стороне сервера
-     *
-     * @param exchange Объект для обмена информацией
-     * @param text     Тело ответа
-     * @throws IOException Исключения при отправке ответа
-     */
-    protected void sendServerError(HttpExchange exchange, String text) throws IOException {
-        sendMessage(exchange, text, 500);
-    }
-
-    /**
      * Метод для отправки HTTP-ответа
      *
      * @param exchange объект для обмена информацией

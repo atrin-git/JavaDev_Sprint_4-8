@@ -71,13 +71,9 @@ public class TaskHandler extends ManagerAwareHandler implements HttpHandler {
     }
 
     private void sendAllTasks(HttpExchange exchange) throws IOException {
-        try {
-            List<Task> tasks = manager.getTasks();
-            String allTasksStr = gson.toJson(tasks);
-            sendText(exchange, allTasksStr);
-        } catch (ManagerReadException e) {
-            sendServerError(exchange, e.getMessage());
-        }
+        List<Task> tasks = manager.getTasks();
+        String allTasksStr = gson.toJson(tasks);
+        sendText(exchange, allTasksStr);
     }
 
     private void sendTaskById(HttpExchange exchange, String pathParamId) throws IOException {
@@ -90,8 +86,6 @@ public class TaskHandler extends ManagerAwareHandler implements HttpHandler {
             sendErrorRequest(exchange, "Запрос сформирован некорректно. Не удаётся определить номер таски из " + pathParamId);
         } catch (NotFoundException e) {
             sendNotFound(exchange, e.getMessage());
-        } catch (ManagerReadException e) {
-            sendServerError(exchange, e.getMessage());
         }
     }
 
@@ -141,8 +135,6 @@ public class TaskHandler extends ManagerAwareHandler implements HttpHandler {
             sendHasInteractions(exchange, "Добавляемая задача имеет пересечение по времени с другими задачами");
         } catch (WithouIdException e) {
             sendErrorRequest(exchange, "Невозможно обновить задачу без id");
-        } catch (ManagerSaveException e) {
-            sendServerError(exchange, e.getMessage());
         }
     }
 
