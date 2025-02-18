@@ -1,6 +1,4 @@
-package com.taskmanager.service;
-
-import com.taskmanager.model.AbstractTask;
+package com.taskmanager.model;
 
 public class TaskNode {
     private AbstractTask task;

@@ -1,4 +1,4 @@
-package com.taskmanager.service;
+package com.taskmanager.service.managers;
 
 import com.taskmanager.model.AbstractTask;
 

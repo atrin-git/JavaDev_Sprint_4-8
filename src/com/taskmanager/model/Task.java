@@ -40,10 +40,22 @@ public class Task extends AbstractTask {
     /**
      * Конструктор
      *
+     * @param name        Наименование
+     * @param description Описание
+     * @param startTime   Дата и время начала работы над задачей
+     * @param duration    Продолжительность работы с задачей
+     */
+    public Task(String name, String description, LocalDateTime startTime, Duration duration) {
+        super(null, name, description, startTime, duration);
+    }
+
+    /**
+     * Конструктор
+     *
      * @param id   Идентификатор
      * @param name Наименование
      */
-    public Task(int id, String name) {
+    public Task(Integer id, String name) {
         super(id, name);
     }
 
@@ -55,7 +67,7 @@ public class Task extends AbstractTask {
      * @param startTime Дата и время начала работы над задачей
      * @param duration  Продолжительность работы с задачей
      */
-    public Task(int id, String name, LocalDateTime startTime, Duration duration) {
+    public Task(Integer id, String name, LocalDateTime startTime, Duration duration) {
         super(id, name, startTime, duration);
     }
 
@@ -66,7 +78,7 @@ public class Task extends AbstractTask {
      * @param name        Наименование
      * @param description Описание
      */
-    public Task(int id, String name, String description) {
+    public Task(Integer id, String name, String description) {
         super(id, name, description);
     }
 
@@ -79,7 +91,7 @@ public class Task extends AbstractTask {
      * @param startTime   Дата и время начала работы над задачей
      * @param duration    Продолжительность работы с задачей
      */
-    public Task(int id, String name, String description, LocalDateTime startTime, Duration duration) {
+    public Task(Integer id, String name, String description, LocalDateTime startTime, Duration duration) {
         super(id, name, description, startTime, duration);
     }
 

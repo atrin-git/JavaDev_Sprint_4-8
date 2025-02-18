@@ -1,7 +1,8 @@
 package com.taskmanager;
 
-import com.taskmanager.service.Managers;
-import com.taskmanager.service.TaskManager;
+import com.taskmanager.service.HttpTaskServer;
+import com.taskmanager.service.managers.Managers;
+import com.taskmanager.service.managers.TaskManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,28 +14,12 @@ public class Main {
         File file = Files.createTempFile("task", ".csv").toFile();
         TaskManager taskManager = Managers.loadFromFile(file);
 
-        // Тестирование функционала
-        Scenarios scenarios = new Scenarios();
+        HttpTaskServer server = new HttpTaskServer(taskManager);
+        server.start();
 
-        // Проверка добавления задач
-        scenarios.testAdd(taskManager);
-        scenarios.testGetTasks(taskManager);
-        scenarios.testGetPrioritizedTasks(taskManager);
+        new Scenarios().testAdd(taskManager);
 
-        // Проверка изменения задач
-        scenarios.testEdit(taskManager);
-        scenarios.testGetTasks(taskManager);
-        scenarios.testGetPrioritizedTasks(taskManager);
-
-        // Проверка обновления статусов
-        scenarios.updateStatuses(taskManager);
-
-        // Проверка просмотра истории
-        Scenarios.testHistory(taskManager);
-
-        // Проверка удаления
-        scenarios.testDelete(taskManager);
-        scenarios.testGetTasks(taskManager);
+        server.stop();
 
         file.deleteOnExit();
     }

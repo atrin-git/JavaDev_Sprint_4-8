@@ -1,6 +1,8 @@
-package com.taskmanager.service;
+package com.taskmanager.service.managers;
 
 import com.taskmanager.model.*;
+import com.taskmanager.service.exceptions.ManagerReadException;
+import com.taskmanager.service.exceptions.ManagerSaveException;
 
 import java.io.*;
 import java.time.Duration;
@@ -181,7 +183,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
             }
         } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            throw new ManagerReadException(e.getMessage());
         }
 
         return null;

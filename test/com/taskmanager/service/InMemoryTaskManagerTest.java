@@ -1,6 +1,11 @@
 package com.taskmanager.service;
 
 import com.taskmanager.model.*;
+import com.taskmanager.service.exceptions.AlreadyExistsException;
+import com.taskmanager.service.exceptions.NotFoundException;
+import com.taskmanager.service.exceptions.TimeOverlapException;
+import com.taskmanager.service.exceptions.WithouIdException;
+import com.taskmanager.service.managers.InMemoryTaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +41,9 @@ class InMemoryTaskManagerTest {
     public void checkAddTaskAlreadyAddedTask() {
         Task task = new Task("testTask", "description");
         taskManager.addTask(task);
-        taskManager.addTask(new Task(task));
+        assertThrows(AlreadyExistsException.class, () -> {
+            taskManager.addTask(new Task(task));
+        }, "Должно было появиться исключение типа " + AlreadyExistsException.class.getSimpleName());
 
         assertEquals(1, taskManager.getTasks().size(), "Ожидался список из 1 элемента");
     }
@@ -57,7 +64,9 @@ class InMemoryTaskManagerTest {
         Epic epic = new Epic("testEpic", "description");
         epic.addNewSubtask(2);
         taskManager.addEpic(epic);
-        taskManager.addEpic(new Epic(epic));
+        assertThrows(AlreadyExistsException.class, () -> {
+            taskManager.addEpic(new Epic(epic));
+        }, "Должно было появиться исключение типа " + AlreadyExistsException.class.getSimpleName());
 
         assertEquals(1, taskManager.getEpics().size(), "Ожидался список из 1 элемента");
     }
@@ -81,12 +90,22 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
+    public void checkAddSubtaskNewSubtaskEpicNotExisted() {
+        Subtask subtask = new Subtask("testSubtask", "descriptionSub", 100);
+        assertThrows(NotFoundException.class, () -> {
+            taskManager.addSubtask(subtask);
+        }, "Ожидалось исключение " + NotFoundException.class.getSimpleName());
+    }
+
+    @Test
     public void checkAddSubtaskAlreadyAddedSubtask() {
         Epic epic = new Epic("testEpic", "description");
         taskManager.addEpic(epic);
         Subtask subtask = new Subtask("testSubtask", "descriptionSub", epic.getId());
         taskManager.addSubtask(subtask);
-        taskManager.addSubtask(new Subtask(subtask));
+        assertThrows(AlreadyExistsException.class, () -> {
+            taskManager.addSubtask(new Subtask(subtask));
+        }, "Должно было появиться исключение типа " + AlreadyExistsException.class.getSimpleName());
 
         assertEquals(1, taskManager.getSubtasks().size(), "Ожидался список из 1 элемента");
     }
@@ -104,6 +123,18 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
+    public void checkEditTaskWithoutId() {
+        Task task = new Task("oldName", "oldDescription");
+        taskManager.addTask(task);
+        task.setName("newName");
+        task.setDescription("newDescription");
+        task.setId(null);
+        assertThrows(WithouIdException.class, () -> {
+            taskManager.editTask(task);
+        }, "Ожидалось исключение типа " + WithouIdException.class.getSimpleName());
+    }
+
+    @Test
     public void checkEditEpic() {
         Epic epic = new Epic("oldName", "oldDescription");
         epic.addNewSubtask(10);
@@ -115,6 +146,20 @@ class InMemoryTaskManagerTest {
 
         assertEquals(1, taskManager.getEpics().size(), "Ожидался список из 1 элемента");
         assertEquals(epic, taskManager.getEpicById(epic.getId()), "Эпик не изменился");
+    }
+
+    @Test
+    public void checkEditEpicWithoutId() {
+        Epic epic = new Epic("oldName", "oldDescription");
+        epic.addNewSubtask(10);
+        taskManager.addEpic(epic);
+        epic.setName("newName");
+        epic.setDescription("newDescription");
+        epic.addNewSubtask(11);
+        epic.setId(null);
+        assertThrows(WithouIdException.class, () -> {
+            taskManager.editEpic(epic);
+        }, "Ожидалось исключение типа " + WithouIdException.class.getSimpleName());
     }
 
     @Test
@@ -130,6 +175,20 @@ class InMemoryTaskManagerTest {
         assertEquals(1, taskManager.getSubtasks().size(), "Ожидался список из 1 элемента");
         assertEquals(1, taskManager.getEpicById(epic.getId()).getSubtaskList().size(), "Ожидался список из 1 элемента");
         assertEquals(subtask, taskManager.getSubtaskById(subtask.getId()), "Подзадача не изменилось");
+    }
+
+    @Test
+    public void checkEditSubtaskWithoutId() {
+        Epic epic = new Epic("testEpic");
+        taskManager.addEpic(epic);
+        Subtask subtask = new Subtask("oldName", "oldDescription", epic.getId());
+        taskManager.addSubtask(subtask);
+        subtask.setName("newName");
+        subtask.setDescription("newDescription");
+        subtask.setId(null);
+        assertThrows(WithouIdException.class, () -> {
+            taskManager.editSubtask(subtask);
+        }, "Ожидалось исключение типа " + WithouIdException.class.getSimpleName());
     }
 
     @Test
@@ -271,6 +330,13 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
+    public void checkGetTaskByIdNotExisted() {
+        assertThrows(NotFoundException.class, () -> {
+            Task taskReceived = taskManager.getTaskById(100);
+        }, "Ожидалось исключение " + NotFoundException.class.getSimpleName());
+    }
+
+    @Test
     public void checkGetEpicById() {
         Epic epic = new Epic("testEpic");
         taskManager.addEpic(epic);
@@ -278,6 +344,13 @@ class InMemoryTaskManagerTest {
         Epic epicReceived = taskManager.getEpicById(epic.getId());
 
         assertEquals(epic, epicReceived, "Возвращён другой эпик");
+    }
+
+    @Test
+    public void checkGetEpicByIdNotExisted() {
+        assertThrows(NotFoundException.class, () -> {
+            Epic epic = taskManager.getEpicById(100);
+        }, "Ожидалось исключение " + NotFoundException.class.getSimpleName());
     }
 
     @Test
@@ -290,6 +363,13 @@ class InMemoryTaskManagerTest {
         Subtask subtaskReceived = taskManager.getSubtaskById(subtask.getId());
 
         assertEquals(subtask, subtaskReceived, "Возвращена другая подзадача");
+    }
+
+    @Test
+    public void checkGetSubtaskByIdNotExisted() {
+        assertThrows(NotFoundException.class, () -> {
+            Subtask subtask = taskManager.getSubtaskById(100);
+        }, "Ожидалось исключение " + NotFoundException.class.getSimpleName());
     }
 
     @Test
@@ -668,6 +748,28 @@ class InMemoryTaskManagerTest {
         Duration duration60 = Duration.ofMinutes(60);
         Duration duration90 = Duration.ofMinutes(60);
 
+        Task task1 = new Task(2, "TaskName1", "desc", dt1, duration60);
+        Task task2 = new Task(3, "TaskName2", "desc", dt3, duration90);
+        Task task3 = new Task(4, "TaskName3", "desc", dt2, duration30);
+        taskManager.addTask(task1);
+        taskManager.addTask(task2);
+        assertThrows(TimeOverlapException.class, () -> {
+            taskManager.addTask(task3);
+        }, "Должно было появиться исключение типа " + TimeOverlapException.class.getSimpleName());
+
+        assertFalse(taskManager.getTasks().contains(task3));
+    }
+
+    @Test
+    public void checkOverlapSubtasks() {
+        LocalDateTime dt1 = LocalDateTime.of(LocalDate.of(2025, 1, 10), LocalTime.of(10, 0, 0));
+        LocalDateTime dt2 = LocalDateTime.of(LocalDate.of(2025, 1, 10), LocalTime.of(10, 30, 0));
+        LocalDateTime dt3 = LocalDateTime.of(LocalDate.of(2025, 1, 10), LocalTime.of(11, 0, 0));
+
+        Duration duration30 = Duration.ofMinutes(30);
+        Duration duration60 = Duration.ofMinutes(60);
+        Duration duration90 = Duration.ofMinutes(60);
+
         Epic epic = new Epic(1, "Epic");
         taskManager.addEpic(epic);
 
@@ -676,7 +778,9 @@ class InMemoryTaskManagerTest {
         Subtask subtask3 = new Subtask(4, "TaskName3", "desc", epic.getId(), dt2, duration30);
         taskManager.addSubtask(subtask1);
         taskManager.addSubtask(subtask2);
-        taskManager.addSubtask(subtask3);
+        assertThrows(TimeOverlapException.class, () -> {
+            taskManager.addSubtask(subtask3);
+        }, "Должно было появиться исключение типа " + TimeOverlapException.class.getSimpleName());
 
         assertFalse(taskManager.getSubtasks().contains(subtask3));
     }
